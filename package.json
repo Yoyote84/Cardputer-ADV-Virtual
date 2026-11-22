@@ -1,0 +1,12 @@
+{
+  "name": "cardputer-adv-virtual",
+  "private": true,
+  "version": "0.4.0",
+  "description": "Tests navigateur du simulateur M5Stack Cardputer ADV",
+  "scripts": {
+    "test:runtime": "node tests/runtime-browser-smoke.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
