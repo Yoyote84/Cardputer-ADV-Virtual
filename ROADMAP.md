@@ -50,22 +50,41 @@ Critères de sortie :
 
 ## 3/5 — Modèles matériels Cardputer ADV
 
-Objectif : fournir au firmware des périphériques virtuels qui répondent selon les protocoles attendus.
+**Statut : socle de modèles logiciels livré ; validation automatisée en cours.**
 
-Livrables attendus :
-- bus I2C et contrôleur de clavier TCA8418 ;
-- contrôleur d'affichage ST7789V2 et mémoire framebuffer ;
-- IMU BMI270 avec valeurs contrôlables ;
-- modèle audio ES8311, microphone, amplificateur et sortie sonore ;
-- carte microSD virtuelle avec opérations fichier ;
-- lecture de batterie, émetteur IR et GPIO d'extension ;
-- modules d'extension isolés du profil de base.
+Objectif : fournir des périphériques virtuels accessibles via leurs bus, sans prétendre encore exécuter un firmware natif.
+
+Livrables réalisés :
+- [x] bus I²C avec scan, lecture/écriture registre et trace ;
+- [x] bus SPI avec sélection CS et séparation commande/donnée, plus transport I²S par blocs ;
+- [x] TCA8418 à 0x34 : FIFO 10 événements, codes réels, appui/relâchement, flags et clear W1C ;
+- [x] clavier tactile de 56 touches utilisant le keymap empirique du Cardputer ADV et le vrai modèle FIFO ;
+- [x] ST7789V2 : commandes de base, fenêtres, RAMWR, RGB565 et framebuffer 240×135 ;
+- [x] BMI270 : identité, registres de statut, valeurs d'axes brutes pilotables et reset ;
+- [x] ES8311 : registres de contrôle et transport d'échantillons I²S ;
+- [x] NS4150B : modèle numérique de gain/mute/saturation raccordé aux blocs de sortie ES8311 ;
+- [x] microphone : injection d'échantillons numériques ;
+- [x] microSD SPI : initialisation SDHC, CSD v2, lecture/écriture de blocs et capacité sparse de 128 Go ;
+- [x] batterie : valeur ADC brute contrôlable ;
+- [x] GPIO, ports Grove/EXT et capture de trames IR ;
+- [x] rack central et panneau de diagnostics intégré à l'interface ;
+- [x] limites des modèles décrites et aucune fonction non simulée annoncée comme réelle.
 
 Critères de sortie :
-- [ ] chaque périphérique possède une fiche de couverture et des tests de protocole ;
-- [ ] les périphériques non implémentés renvoient une erreur ou un état explicite, jamais une fausse réussite ;
-- [ ] les périphériques partagent les broches et bus documentés ;
-- [ ] le clavier virtuel produit des événements au format du contrôleur matériel.
+- [x] chaque modèle possède une fiche de couverture et des tests de protocole ;
+- [x] les fonctions non implémentées sont signalées explicitement ;
+- [x] les modèles sont rattachés aux adresses I²C, broches SPI, GPIO et bus du profil ;
+- [x] les événements du clavier UI passent par les registres et le FIFO TCA8418 virtuels ;
+- [ ] test manuel de l'interface sur le Galaxy Z Flip6 à confirmer indépendamment.
+
+Limites conservées pour l'étape 4 :
+- le CPU ESP32-S3 n'est pas encore émulé et aucun BIN n'est exécuté ;
+- BMI270 : image de configuration Bosch et fonctions avancées absentes ;
+- ES8311/NS4150B : niveau numérique par blocs uniquement, pas de simulation électrique/acoustique ;
+- microSD : stockage sparse bloc par SPI, pas de CRC ni d'émulation complète de tous les modes SD ;
+- Cap LoRa/GNSS : emplacement d'extension réservé, module SX1262/GNSS non modélisé à ce stade.
+
+Le détail des capacités et des limites est consigné dans [la matrice de compatibilité](docs/COMPATIBILITY_MATRIX.md) et [le guide des périphériques](app/emulator/README.md).
 
 ## 4/5 — Exécution et débogage des firmwares
 
