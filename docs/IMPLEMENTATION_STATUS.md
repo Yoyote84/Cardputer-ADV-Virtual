@@ -32,7 +32,7 @@
 
 ## Étape 3/5 — Modèles matériels Cardputer ADV
 
-**Statut : socle de modèles logiciels livré ; aucun firmware natif n'est encore exécuté.**
+**Statut : socle de modèles logiciels livré ; 23/23 tests GitHub Actions réussis. Aucun firmware natif n'est encore exécuté.**
 
 - [x] Bus I²C, SPI et I²S local.
 - [x] Clavier mappé sur les 56 touches physiques et modèle TCA8418 avec FIFO.
@@ -42,7 +42,7 @@
 - [x] microSD SPI SDHC avec CSD v2, blocs sparse et capacité annoncée de 128 Go.
 - [x] GPIO, ADC batterie, capture IR et table Grove/EXT.
 - [x] Rack de périphériques et panneau de diagnostic dans l'interface.
-- [x] Tests automatisés des modèles matériels ajoutés.
+- [x] 23 tests automatisés réussis (interface, mapping clavier, bus et modèles périphériques).
 - [ ] Comparaison tactile/visuelle sur le vrai Z Flip6.
 - [ ] Modèle SX1262/GNSS optionnel non inclus au socle.
 
