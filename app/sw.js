@@ -6,7 +6,17 @@ const APP_ASSETS = [
   './index.html',
   './styles.css',
   './app.js',
+  './app.mjs',
   './keyboard-layout.json',
+  './emulator/i2c-bus.mjs',
+  './emulator/spi-bus.mjs',
+  './emulator/tca8418.mjs',
+  './emulator/st7789v2.mjs',
+  './emulator/bmi270.mjs',
+  './emulator/es8311.mjs',
+  './emulator/sd-spi-card.mjs',
+  './emulator/simple-peripherals.mjs',
+  './emulator/device-rack.mjs',
   './manifest.webmanifest',
   './icons/cardputer.svg'
 ];
