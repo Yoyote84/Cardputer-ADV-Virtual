@@ -1,0 +1,113 @@
+# Feuille de route — 5 étapes
+
+Le projet est découpé en cinq étapes. L'étape 5 doit produire le simulateur complet prévu ; les tests réalisés ensuite sur le Cardputer physique serviront à corriger les écarts, pas à terminer une fonction manquante.
+
+## 1/5 — Fondations et audit technique
+
+**État : terminée.**
+
+Livrables réalisés :
+- dépôt identifié et vérifié ;
+- audit du code et des limites de Velxio ;
+- vérification de la licence publiée et des composants non distribués ;
+- profil matériel Cardputer ADV fondé sur la documentation M5Stack ;
+- architecture par adaptateurs et stratégie hors ligne documentées ;
+- structure de projet initialisée ;
+- validation automatique du profil matériel.
+
+Critères de sortie :
+- [x] Les possibilités et limites de réutilisation de Velxio sont écrites.
+- [x] Le modèle matériel et les broches principales sont versionnés.
+- [x] Les inconnues importantes ne sont pas présentées comme des fonctionnalités acquises.
+- [x] Le dépôt peut contrôler automatiquement la cohérence du profil.
+
+## 2/5 — Interface du Cardputer virtuel
+
+Objectif : créer l'appareil virtuel interactif, sans prétendre encore exécuter les firmwares natifs.
+
+Livrables attendus :
+- application Web installable (PWA) ou enveloppe Android selon le prototype retenu ;
+- représentation fidèle de la face avant du Cardputer ADV ;
+- écran logique de 240 × 135 pixels avec mise à l'échelle sans déformation ;
+- clavier de 56 touches utilisable au toucher et par clavier physique Android ;
+- gestion de focus, appui, relâchement, touches modifiées et répétition ;
+- panneau de statut et commandes de simulation.
+
+Critères de sortie :
+- [ ] l'interface fonctionne sur le Z Flip6 en orientation portrait et paysage ;
+- [ ] l'écran conserve exactement son rapport de pixels ;
+- [ ] chaque touche peut être actionnée et testée ;
+- [ ] les événements clavier sont fournis par une interface indépendante de l'émulateur ;
+- [ ] les ressources d'interface installées sont servies localement.
+
+## 3/5 — Modèles matériels Cardputer ADV
+
+Objectif : fournir au firmware des périphériques virtuels qui répondent selon les protocoles attendus.
+
+Livrables attendus :
+- bus I2C et contrôleur de clavier TCA8418 ;
+- contrôleur d'affichage ST7789V2 et mémoire framebuffer ;
+- IMU BMI270 avec valeurs contrôlables ;
+- modèle audio ES8311, microphone, amplificateur et sortie sonore ;
+- carte microSD virtuelle avec opérations fichier ;
+- lecture de batterie, émetteur IR et GPIO d'extension ;
+- modules d'extension isolés du profil de base.
+
+Critères de sortie :
+- [ ] chaque périphérique possède une fiche de couverture et des tests de protocole ;
+- [ ] les périphériques non implémentés renvoient une erreur ou un état explicite, jamais une fausse réussite ;
+- [ ] les périphériques partagent les broches et bus documentés ;
+- [ ] le clavier virtuel produit des événements au format du contrôleur matériel.
+
+## 4/5 — Exécution et débogage des firmwares
+
+Objectif : exécuter le vrai code compilé pour ESP32-S3 et le raccorder aux modèles matériels.
+
+Prototype bloquant à réaliser en premier :
+- construire et lancer le moteur ESP32-S3 sur Android ARM64, ou démontrer une solution WebAssembly locale viable ;
+- lancer un firmware de test ESP32-S3 sans réseau ;
+- vérifier l'accès au stockage flash, à l'UART et aux événements GPIO ;
+- mesurer mémoire, temps de démarrage et stabilité sur le Z Flip6.
+
+Livrables attendus :
+- import sécurisé de fichiers BIN et, si le moteur le permet, ELF ;
+- vérification de taille, format, cible et éventuelles partitions ;
+- chargement de la flash virtuelle et séquence de reset ;
+- console UART, journaux du moteur et rapport de crash ;
+- arrêt, redémarrage et rechargement du firmware ;
+- raccordement des périphériques virtuels au moteur.
+
+Critères de sortie :
+- [ ] un firmware ESP32-S3 de test démarre réellement dans le moteur local ;
+- [ ] la console série reçoit les sorties réelles du firmware ;
+- [ ] les accès périphériques sont reliés aux modèles correspondants ;
+- [ ] l'application reste hors ligne pendant l'exécution ;
+- [ ] les erreurs de compatibilité sont explicites.
+
+**Limite de compatibilité :** un fichier BIN assemblé pour une carte différente, une version matérielle différente ou un périphérique non pris en charge ne sera pas garanti compatible.
+
+## 5/5 — Intégration, validation et livraison
+
+Objectif : réunir l'interface, l'émulateur et les périphériques dans une application installable.
+
+Livrables attendus :
+- intégration complète de l'écran, du clavier, des périphériques et du moteur ;
+- importation, sélection et historique des firmwares ;
+- sauvegarde des cartes SD et états virtuels ;
+- stockage local et lancement hors ligne ;
+- installation Android (APK si enveloppe native retenue, sinon PWA installable) ;
+- tests automatisés et scénarios de référence ;
+- documentation utilisateur en français ;
+- rapport de compatibilité et paquet de livraison.
+
+Critères de sortie :
+- [ ] installation et premier lancement documentés sur Android ;
+- [ ] une session de simulation fonctionne sans Internet ;
+- [ ] les scénarios de test passent sur le Z Flip6 ;
+- [ ] les limites des périphériques et des firmwares sont visibles ;
+- [ ] les sauvegardes survivent à la fermeture de l'application ;
+- [ ] les artefacts de livraison sont publiés.
+
+## Règle de qualité
+
+Une fonctionnalité est marquée « prise en charge » uniquement lorsqu'un test reproductible la démontre. Les écrans simulés, les périphériques modélisés et l'exécution réelle du code sont trois niveaux différents et seront suivis séparément.
