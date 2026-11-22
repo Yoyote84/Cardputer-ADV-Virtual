@@ -70,26 +70,26 @@ try {
   await page.waitForFunction(() => {
     const info = document.querySelector("#firmware-file-info")?.textContent || "";
     return info.includes("SHA-256") && !info.includes("Aucun firmware");
-  }, { timeout: 15000 });
+  }, undefined, { timeout: 15000 });
 
   await page.locator("#firmware-load").click();
   await page.waitForFunction(() => {
     const status = document.querySelector("#firmware-runtime-status");
     return status?.dataset.state === "success" &&
       status.textContent.includes("BIN chargé dans le moteur");
-  }, { timeout: 60000 });
+  }, undefined, { timeout: 60000 });
 
   await page.locator("#firmware-start").click();
   await page.waitForFunction(() => {
     const output = document.querySelector("#firmware-console")?.textContent || "";
     return output.includes("CARDPUTER_RUNTIME_OK");
-  }, { timeout: 90000 });
+  }, undefined, { timeout: 90000 });
 
   await page.locator("#firmware-stop").click();
   await page.waitForFunction(() => {
     const status = document.querySelector("#firmware-runtime-status")?.textContent || "";
     return status.includes("Exécution arrêtée");
-  }, { timeout: 10000 });
+  }, undefined, { timeout: 10000 });
 
   assert.deepEqual(pageErrors, [], "Le navigateur a signalé des erreurs JavaScript.");
   console.log("PASS: BIN ESP32-S3 chargé dans ESP-EMU WebAssembly.");
