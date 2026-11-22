@@ -1,6 +1,13 @@
 'use strict';
 
-const CACHE_NAME = 'cardputer-adv-virtual-ui-v2';
+const CACHE_NAME = 'cardputer-adv-virtual-ui-v3-runtime';
+const RUNTIME_ASSETS = [
+  './vendor/esp-emu/runtime/pkg/esp_emu.js',
+  './vendor/esp-emu/runtime/pkg/esp_emu_bg.wasm',
+  './vendor/esp-emu/runtime/cosim.js',
+  './vendor/esp-emu/runtime/vendor/esp_cosim_pb.js'
+];
+
 const APP_ASSETS = [
   './',
   './index.html',
@@ -25,7 +32,22 @@ const APP_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_ASSETS)).then(() => self.skipWaiting()));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(APP_ASSETS);
+    // The WASM runtime is present in the packaged PWA build, but optional in a source checkout.
+    // Cache each file independently so a missing runtime does not break installation of the UI.
+    await Promise.all(RUNTIME_ASSETS.map(async (asset) => {
+      try {
+        const url = new URL(asset, self.location.href);
+        const response = await fetch(url, { cache: 'reload' });
+        if (response.ok && response.type === 'basic') await cache.put(url, response);
+      } catch {
+        // Runtime is supplied by the dedicated release bundle; keep the interface installable without it.
+      }
+    }));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', (event) => {
