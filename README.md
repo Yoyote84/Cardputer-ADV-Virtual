@@ -2,9 +2,9 @@
 
 Simulateur dédié au **M5Stack Cardputer ADV (K132-Adv)**, avec pour cible d'utilisation un Samsung Galaxy Z Flip6 et un fonctionnement hors ligne.
 
-> **État du projet : étape 2/5 — interface interactive livrée ; vérification sur le Galaxy Z Flip6 à effectuer.**
+> **État du projet : étape 3/5 — modèles matériels logiciels livrés ; vérification sur le Galaxy Z Flip6 à effectuer.**
 >
-> Le dépôt contient une interface Web locale et installable (PWA), le profil matériel versionné, les décisions d'architecture et des tests automatisés. Le moteur ESP32-S3 et les modèles de périphériques ne sont pas encore implémentés : aucune image BIN Cardputer n'est exécutée à cette étape.
+> Le dépôt contient l'interface PWA, le clavier réel mappé depuis un relevé matériel public et les modèles logiciels des bus et périphériques Cardputer ADV. Le runtime ESP32-S3 n'est pas encore intégré : aucune image BIN Cardputer n'est exécutée à cette étape.
 
 ## Objectif final
 
@@ -25,6 +25,22 @@ python3 -m http.server 8080 --directory app
 Ouvrir `http://localhost:8080`. Pour l'installation PWA et le cache hors ligne, servir le dossier `app/` depuis une origine HTTPS. Le cache contient l'interface, la feuille de style, le script et le keymap. Il ne contient pas de moteur de simulation.
 
 Voir [les instructions de prévisualisation](README-PREVIEW.md) et [le contrat du clavier](docs/KEYBOARD_INTERFACE.md).
+
+## Modèles matériels disponibles — étape 3
+
+Les périphériques logiciels sont dans [app/emulator/](app/emulator/) : bus I²C/SPI/I²S, FIFO TCA8418, framebuffer ST7789V2, BMI270, ES8311, NS4150B, microSD SPI sparse de 128 Go, GPIO, ADC batterie et capture IR. Le clavier interactif envoie désormais les événements au modèle TCA8418 avant de les exposer à l'interface.
+
+Lancer tous les tests :
+
+\`\`\`bash
+node --check app/app.js
+node --check app/app.mjs
+for file in app/emulator/*.mjs; do node --check "$file"; done
+node --test tests/*.test.mjs
+python3 tools/validate_profile.py
+\`\`\`
+
+Les modèles restent partiels sur certaines fonctions : configuration avancée BMI270, chemin analogique audio, CRC/modes SD complets et extension LoRa/GNSS. Voir [la matrice de compatibilité](docs/COMPATIBILITY_MATRIX.md).
 
 ## Ce que l'audit a établi
 
@@ -54,7 +70,7 @@ Les détails et brochages sont dans [le profil matériel](docs/HARDWARE_PROFILE.
 | --- | --- | --- |
 | 1/5 | Audit de Velxio, étude du matériel, architecture, structure et validation du profil | **Terminée** |
 | 2/5 | Interface du Cardputer virtuel : boîtier, écran, clavier et interactions tactiles | **Livrée — essai sur Z Flip6 à confirmer** |
-| 3/5 | Modèles des périphériques : I2C, écran, clavier, IMU, audio, batterie, microSD et extensions | À faire |
+| 3/5 | Modèles des périphériques : I2C, écran, clavier, IMU, audio, batterie, microSD et extensions | **Socle logiciel livré — couverture partielle documentée** |
 | 4/5 | Moteur ESP32-S3 local, import BIN/ELF, démarrage, console et débogage | À faire |
 | 5/5 | Intégration finale, mode hors ligne, tests de compatibilité et paquet Android installable | À faire |
 
@@ -62,11 +78,11 @@ Les critères de sortie de chaque étape sont détaillés dans [ROADMAP.md](ROAD
 
 ## Structure actuelle
 
-- `app/` : interface PWA, écran canvas, clavier de 56 touches, icône et cache offline-first.
+- `app/` : interface PWA, écran ST7789V2 virtuel, clavier TCA8418 de 56 touches et modèles de périphériques dans `app/emulator/`.
 - `cardputer/` : profil matériel et schéma de validation.
 - `docs/` : audit, architecture, compatibilité, décisions et état d'avancement.
 - `tools/` : validation locale du profil matériel.
-- `tests/` : tests Node intégrés pour la disposition, les ressources PWA et les points de rupture responsive.
+- `tests/` : tests Node intégrés pour le mapping réel, le rendu responsive, les bus et les périphériques.
 - `.github/workflows/` : validation du profil matériel et des contrats d'interface à chaque push et pull request.
 
 ## Vérifier le projet
@@ -75,7 +91,9 @@ Prérequis : Python 3 et Node.js 18 ou ultérieur.
 
 ```bash
 node --check app/app.js
-node --test tests/interface.test.mjs
+node --check app/app.mjs
+for file in app/emulator/*.mjs; do node --check "$file"; done
+node --test tests/*.test.mjs
 python3 tools/validate_profile.py
 ```
 
