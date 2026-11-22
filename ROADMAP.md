@@ -23,22 +23,30 @@ Critères de sortie :
 
 ## 2/5 — Interface du Cardputer virtuel
 
-Objectif : créer l'appareil virtuel interactif, sans prétendre encore exécuter les firmwares natifs.
+**Statut : interface livrée et tests automatisés réussis ; essai physique sur le Galaxy Z Flip6 à confirmer.**
 
-Livrables attendus :
-- application Web installable (PWA) ou enveloppe Android selon le prototype retenu ;
-- représentation fidèle de la face avant du Cardputer ADV ;
-- écran logique de 240 × 135 pixels avec mise à l'échelle sans déformation ;
-- clavier de 56 touches utilisable au toucher et par clavier physique Android ;
-- gestion de focus, appui, relâchement, touches modifiées et répétition ;
-- panneau de statut et commandes de simulation.
+Livrables réalisés :
+- [x] interface Web autonome, en français, sans dépendance CDN ;
+- [x] coque responsive dessinée au format physique 84 × 54 ;
+- [x] écran canvas logique de 240 × 135 pixels ;
+- [x] clavier tactile avec 56 touches sur quatre rangées de 14 ;
+- [x] prise en charge du clavier physique via `KeyboardEvent.code` ;
+- [x] touches FN, CTRL, OPT, ALT et bascule Aa ;
+- [x] état actif des touches, dernière touche et moniteur d'événements ;
+- [x] commandes d'alimentation de l'écran, reset UI et plein écran ;
+- [x] manifeste PWA, icône SVG originale et service worker local ;
+- [x] contrat d'événements `cardputer:keyboard` isolé des futurs pilotes ;
+- [x] huit tests automatisés Node.js.
 
 Critères de sortie :
-- [ ] l'interface fonctionne sur le Z Flip6 en orientation portrait et paysage ;
-- [ ] l'écran conserve exactement son rapport de pixels ;
-- [ ] chaque touche peut être actionnée et testée ;
-- [ ] les événements clavier sont fournis par une interface indépendante de l'émulateur ;
-- [ ] les ressources d'interface installées sont servies localement.
+- [x] le layout CSS prévoit le portrait et les petites largeurs de téléphone ;
+- [x] l'écran conserve son rapport 240:135 ;
+- [x] les 56 touches sont actionnables par pointeur ;
+- [x] les événements sont exposés sans dépendre du runtime ;
+- [x] les ressources d'interface sont mises en cache localement par le service worker ;
+- [ ] le fonctionnement tactile et la mise en page doivent être confirmés sur le véritable Galaxy Z Flip6.
+
+**Limite :** le clavier UI n'est pas encore un TCA8418 émulé, le canvas n'est pas piloté par l'ESP32-S3 et aucun fichier BIN n'est exécuté. Ces fonctions relèvent des étapes 3 et 4.
 
 ## 3/5 — Modèles matériels Cardputer ADV
 
