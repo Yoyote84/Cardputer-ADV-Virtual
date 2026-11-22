@@ -4,7 +4,7 @@
 
 ## Étape 1/5 — Fondations
 
-<badge>Terminée côté audit et structure</badge>
+**Statut : terminée côté audit et structure**
 
 - [x] Dépôt public vérifié.
 - [x] Dépôt Velxio analysé (README, licence, carte en ligne uniquement, registre de cartes, moteur ESP32 QEMU).
