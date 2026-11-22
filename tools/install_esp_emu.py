@@ -20,8 +20,8 @@ ARCHIVE_URL = (
     "v1.2.0/esp-emu-1.2.0-wasm.tar.gz"
 )
 EXPECTED_SHA256 = "29cd94f779a7618d2646960dfb8897849e78a5e023de1da3ca831f658534a655"
-REQUIRED = {"pkg/esp_emu.js", "pkg/esp_emu_bg.wasm", "cosim.js"}
-OPTIONAL = {"part-worker.js", "vendor/esp_cosim_pb.js"}
+REQUIRED = {"pkg/esp_emu.js", "pkg/esp_emu_bg.wasm", "cosim.js", "vendor/esp_cosim_pb.js"}
+OPTIONAL = {"part-worker.js"}
 MAX_ARCHIVE_BYTES = 20 * 1024 * 1024
 MAX_MEMBER_BYTES = 20 * 1024 * 1024
 
