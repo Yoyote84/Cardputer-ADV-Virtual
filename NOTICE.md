@@ -55,3 +55,12 @@ Pour chaque composant tiers qui sera effectivement copié ou lié :
 ## Licence de ce dépôt
 
 Le code original de ce dépôt est publié sous GNU AGPL v3.0. Cette licence ne remplace pas les licences distinctes des dépendances.
+
+
+## Espressif esp-emu — moteur ESP32-S3 WebAssembly
+
+- Projet : [espressif/esp-emulator](https://github.com/espressif/esp-emulator)
+- Version utilisée par l'intégration : **v1.2.0** (bundle WASM téléchargé séparément, non commité par défaut).
+- Licence : **Apache License 2.0** ; copie dans `app/vendor/esp-emu/LICENSE`.
+- L'installateur vérifie le SHA-256 de l'archive publiée avant extraction.
+- Ce dépôt n'a pas modifié ni recompilé les sources du moteur Espressif.
