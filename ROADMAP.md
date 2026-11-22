@@ -138,3 +138,19 @@ Critères de sortie :
 ## Règle de qualité
 
 Une fonctionnalité est marquée « prise en charge » uniquement lorsqu'un test reproductible la démontre. Les écrans simulés, les périphériques modélisés et l'exécution réelle du code sont trois niveaux différents et seront suivis séparément.
+
+
+## Avancement détaillé — étape 4/5
+
+Le dépôt sélectionne Espressif esp-emu 1.2.0 en WebAssembly comme runtime, ajoute l'installateur vérifié SHA-256, le worker ESP32-S3, l'import contrôlé des BIN, les commandes CPU et une console UART. L'exécution réelle d'un firmware, le raccordement des périphériques Cardputer ADV et les mesures sur Z Flip6 restent des critères de validation non cochés.
+
+- [x] moteur retenu, version épinglée et installateur vérifiant l'archive par SHA-256 ;
+- [x] interface d'import BIN, contrôle taille/format, calcul SHA-256 et worker d'intégration ;
+- [x] commandes de cycle de vie du worker (start/stop/reset) et console UART ;
+- [ ] bundle WebAssembly installé et chargé réellement dans un navigateur ;
+- [ ] firmware ESP32-S3 de test démarré avec sortie UART vérifiée ;
+- [ ] accès écran, clavier et périphériques Cardputer reliés aux modèles correspondants ;
+- [ ] application testée hors ligne après mise en cache complète du runtime ;
+- [ ] tests de performances et mémoire sur Galaxy Z Flip6.
+
+Un BIN accepté par l'importeur ne constitue pas une garantie de compatibilité : seul le moteur puis un démarrage de référence peuvent le confirmer.
