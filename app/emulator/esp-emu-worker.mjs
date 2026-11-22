@@ -51,15 +51,53 @@ async function loadFirmware(buffer, filename) {
   }
 }
 
+function sendMetrics() {
+  if (!engine) return;
+  try {
+    send("metrics", {
+      cycles: Number(engine.cycles?.() ?? 0),
+      cyclesPerUs: Number(engine.cycles_per_us?.() ?? 0),
+      faulted: Boolean(engine.faulted?.())
+    });
+  } catch {}
+}
+
 function startFirmware() {
   if (!engine || !pump) throw new Error("Aucun firmware chargé.");
   if (running) return;
   pump.start(
     (text) => send("uart", { text: String(text) }),
-    (error) => reportError(error)
+    (error) => reportError(error),
+    { onBatch: sendMetrics }
   );
   running = true;
   send("running", { filename: loadedName });
+  sendMetrics();
+}
+
+async function loadElfSymbols(buffer, filename) {
+  if (!engine) throw new Error("Charge d'abord le BIN ESP32-S3.");
+  if (typeof engine.load_app_elf !== "function") {
+    throw new Error("Cette version du moteur ne fournit pas load_app_elf pour les symboles.");
+  }
+  engine.set_panic_intercept?.(true);
+  engine.load_app_elf(new Uint8Array(buffer));
+  send("elf-loaded", { filename });
+  sendMetrics();
+}
+
+async function stepBatch() {
+  if (!engine) throw new Error("Aucun firmware chargé.");
+  stopPump();
+  const output = engine.run_batch(1000);
+  if (output) send("uart", { text: String(output) });
+  sendMetrics();
+  if (engine.faulted?.()) {
+    reportError(new Error("Faute CPU pendant le pas d'exécution."));
+    return;
+  }
+  await createPump();
+  send("stepped");
 }
 
 async function resetFirmware() {
@@ -84,6 +122,10 @@ self.onmessage = async (event) => {
       send("stopped");
     } else if (message.type === "RESET") {
       await resetFirmware();
+    } else if (message.type === "LOAD_ELF") {
+      await loadElfSymbols(message.buffer, message.filename);
+    } else if (message.type === "STEP") {
+      await stepBatch();
     }
   } catch (error) {
     reportError(error);
