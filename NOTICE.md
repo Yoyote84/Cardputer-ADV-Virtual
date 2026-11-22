@@ -16,6 +16,13 @@ Le présent projet ne copie pas et ne cherche pas à contourner les éléments p
 
 Le guide Velxio de construction QEMU renvoie à une archive source QEMU adaptée disponible via leur mécanisme de licence. Cette archive et les binaires associés ne sont pas inclus ici. Leur obtention, leur licence GPL-2.0 annoncée dans la documentation et leur compatibilité Android devront être vérifiées séparément avant intégration.
 
+## Disposition du clavier Cardputer ADV
+
+- Référence : [kamrrillo/Cardputer-ADV-Keyboard](https://github.com/kamrrillo/Cardputer-ADV-Keyboard).
+- Licence annoncée dans le dépôt de référence : MIT.
+- Utilisation dans ce projet : référence du positionnement des touches, des codes et de quelques combinaisons Fn ; aucun code source du pilote n'a été copié.
+- Les détails matériels de l'interface TCA8418 (FIFO, registres, interruptions et timings) seront modélisés et vérifiés séparément à l'étape 3.
+
 ## M5Stack Cardputer ADV
 
 Les dimensions, composants et brochages du profil matériel proviennent de la [documentation officielle M5Stack](https://docs.m5stack.com/en/core/Cardputer-Adv). M5Stack et Cardputer sont des marques de leurs propriétaires respectifs. Ce dépôt est un projet communautaire indépendant et n'est ni affilié à M5Stack ni approuvé par M5Stack.
