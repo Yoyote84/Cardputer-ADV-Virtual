@@ -39,7 +39,9 @@ export class ES8311Device {
 
   receiveI2S(samples, format = {}) {
     this.playbackFormat = { sampleRate: format.sampleRate ?? null, bits: format.bits ?? null, channels: format.channels ?? 1 };
-    for (const sample of samples) {
+    const frame = Int16Array.from(samples);
+    this.onPlaybackFrame?.(frame, this.playbackFormat);
+    for (const sample of frame) {
       this.playbackSamples.push(sample);
       if (this.playbackSamples.length > this.maxBufferedSamples) this.playbackSamples.shift();
     }
