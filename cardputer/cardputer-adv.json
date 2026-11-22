@@ -57,7 +57,9 @@
       "sda": 8,
       "scl": 9
     },
-    "i2c_address": null
+    "i2c_address": 105,
+    "i2c_address_source": "M5Stack Cardputer ADV v1.0 schematic sheet 3: BMI270 U7 SDO pulled high by R43; printed address 69H",
+    "interrupt_routed": false
   },
   "audio": {
     "codec": "ES8311",
@@ -74,7 +76,11 @@
       "asdout": 46,
       "lrck": 43,
       "dsdin": 42
-    }
+    },
+    "i2c_address": 24,
+    "i2c_address_source": "M5Unified ES8311 default address and Cardputer ADV shared internal I2C bus",
+    "mclk_pin": null,
+    "mclk_source": "BCLK (GPIO41) is used as MCLK; no separate MCLK pin is routed"
   },
   "infrared": {
     "transmitter_pin": 44
@@ -179,7 +185,10 @@
   "extensions": [],
   "limitations": [
     "Ce profil décrit uniquement le Cardputer ADV K132-Adv de base.",
-    "Les adresses I2C et le keymap doivent être confirmés avant l'implémentation des pilotes virtuels.",
+    "Les adresses du bus I2C interne sont établies à partir du schéma ADV v1.0 et des sources M5Stack ; un scan sur l'appareil physique reste à effectuer.",
+    "Le BMI270 a ses broches INT1 et INT2 non routées sur le schéma ADV v1.0 ; les mesures sont donc lues par polling.",
+    "Le keymap du TCA8418 est relevé touche par touche sur un Cardputer ADV physique par la référence communautaire MIT.",
+    "Le codec ES8311 n'a pas de ligne MCLK distincte ; le firmware doit utiliser BCLK comme MCLK.",
     "Le module LoRa/GNSS externe n'est pas intégré au profil de base.",
     "La capacité de batterie de 1500 mAh suit la fiche M5Stack actualisée le 13 juillet 2026."
   ]
