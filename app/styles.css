@@ -289,3 +289,5 @@ code { padding: 1px 4px; border-radius: 4px; background: #273731; color: #c3e7b2
   .firmware-controls .control-button { flex: 1 1 calc(50% - .55rem); }
   .firmware-console { font-size: .7rem; }
 }
+
+.firmware-metrics { font-variant-numeric: tabular-nums; }
