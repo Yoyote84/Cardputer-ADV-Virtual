@@ -2,15 +2,29 @@
 
 Simulateur dédié au **M5Stack Cardputer ADV (K132-Adv)**, avec pour cible d'utilisation un Samsung Galaxy Z Flip6 et un fonctionnement hors ligne.
 
-> **État du projet : étape 1/5 terminée — fondations et audit technique.**
+> **État du projet : étape 2/5 — interface interactive livrée ; vérification sur le Galaxy Z Flip6 à effectuer.**
 >
-> Le dépôt contient la documentation de référence, le profil matériel versionné, les décisions d'architecture et une validation automatisée de ce profil. Il ne contient pas encore de moteur qui exécute un firmware Cardputer : cette capacité sera développée et testée dans les étapes suivantes.
+> Le dépôt contient une interface Web locale et installable (PWA), le profil matériel versionné, les décisions d'architecture et des tests automatisés. Le moteur ESP32-S3 et les modèles de périphériques ne sont pas encore implémentés : aucune image BIN Cardputer n'est exécutée à cette étape.
 
 ## Objectif final
 
 L'application devra permettre de charger un firmware compilé pour le Cardputer ADV, de le démarrer dans un environnement simulé, d'utiliser un écran et un clavier virtuels, de gérer une carte microSD virtuelle et d'observer les sorties série et les erreurs. L'utilisation normale du simulateur devra être possible sans connexion Internet après installation des ressources nécessaires.
 
 La compatibilité sera annoncée par fonctionnalité et testée avec des firmwares réels. Un écran dessiné à l'identique ne sera jamais présenté comme une preuve que le code ESP32-S3 a été exécuté.
+
+## Interface disponible — étape 2
+
+L'interface est dans [app/](app/) : coque virtuelle au format du Cardputer ADV, écran logique 240 × 135, clavier tactile de 56 touches, prise en charge du clavier physique Android, modificateurs et moniteur d'événements.
+
+Pour lancer un aperçu local depuis la racine du dépôt :
+
+```bash
+python3 -m http.server 8080 --directory app
+```
+
+Ouvrir `http://localhost:8080`. Pour l'installation PWA et le cache hors ligne, servir le dossier `app/` depuis une origine HTTPS. Le cache contient l'interface, la feuille de style, le script et le keymap. Il ne contient pas de moteur de simulation.
+
+Voir [les instructions de prévisualisation](README-PREVIEW.md) et [le contrat du clavier](docs/KEYBOARD_INTERFACE.md).
 
 ## Ce que l'audit a établi
 
@@ -39,7 +53,7 @@ Les détails et brochages sont dans [le profil matériel](docs/HARDWARE_PROFILE.
 | Étape | Objectif | État |
 | --- | --- | --- |
 | 1/5 | Audit de Velxio, étude du matériel, architecture, structure et validation du profil | **Terminée** |
-| 2/5 | Interface du Cardputer virtuel : boîtier, écran, clavier et interactions tactiles | À faire |
+| 2/5 | Interface du Cardputer virtuel : boîtier, écran, clavier et interactions tactiles | **Livrée — essai sur Z Flip6 à confirmer** |
 | 3/5 | Modèles des périphériques : I2C, écran, clavier, IMU, audio, batterie, microSD et extensions | À faire |
 | 4/5 | Moteur ESP32-S3 local, import BIN/ELF, démarrage, console et débogage | À faire |
 | 5/5 | Intégration finale, mode hors ligne, tests de compatibilité et paquet Android installable | À faire |
@@ -48,10 +62,22 @@ Les critères de sortie de chaque étape sont détaillés dans [ROADMAP.md](ROAD
 
 ## Structure actuelle
 
+- `app/` : interface PWA, écran canvas, clavier de 56 touches, icône et cache offline-first.
 - `cardputer/` : profil matériel et schéma de validation.
 - `docs/` : audit, architecture, compatibilité, décisions et état d'avancement.
 - `tools/` : validation locale du profil matériel.
-- `.github/workflows/` : validation automatique du profil à chaque push et pull request.
+- `tests/` : tests Node intégrés pour la disposition, les ressources PWA et les points de rupture responsive.
+- `.github/workflows/` : validation du profil matériel et des contrats d'interface à chaque push et pull request.
+
+## Vérifier le projet
+
+Prérequis : Python 3 et Node.js 18 ou ultérieur.
+
+```bash
+node --check app/app.js
+node --test tests/interface.test.mjs
+python3 tools/validate_profile.py
+```
 
 ## Vérifier le profil
 
