@@ -4,6 +4,7 @@ import { TCA8418, TCA8418Device } from "./tca8418.mjs";
 import { ST7789V2Device } from "./st7789v2.mjs";
 import { BMI270Device } from "./bmi270.mjs";
 import { ES8311Device } from "./es8311.mjs";
+import { NS4150BAmplifier } from "./ns4150b.mjs";
 import { SDSpiCard } from "./sd-spi-card.mjs";
 import { VirtualGPIOBank, BatteryADCModel, InfraredTransmitter, CARDPUTER_ADV_PORTS } from "./simple-peripherals.mjs";
 
@@ -17,6 +18,8 @@ export function createCardputerDeviceRack() {
   const display = new ST7789V2Device({ width: 240, height: 135 });
   const imu = new BMI270Device();
   const codec = new ES8311Device();
+  const amplifier = new NS4150BAmplifier({ gain: 1, enabled: true });
+  codec.onPlaybackFrame = (samples) => amplifier.process(samples);
   const sdCard = new SDSpiCard({ capacityBlocks: 250_000_000 });
   const battery = new BatteryADCModel(gpio, { capacityMah: 1500, adcPin: 10 });
   const infrared = new InfraredTransmitter({ gpio, pin: 44 });
@@ -57,6 +60,7 @@ export function createCardputerDeviceRack() {
         present: true,
         ...sdCard.status
       },
+      audioAmplifier: amplifier.status,
       battery: battery.status,
       infrared: infrared.status,
       extensionPorts: CARDPUTER_ADV_PORTS
@@ -67,7 +71,7 @@ export function createCardputerDeviceRack() {
     profile: "M5Stack Cardputer ADV K132-Adv",
     buses: { i2c, spi, i2s },
     gpio,
-    devices: { keyboard, display, imu, codec, sdCard, battery, infrared },
+    devices: { keyboard, display, imu, codec, amplifier, sdCard, battery, infrared },
     diagnostics
   };
 }
