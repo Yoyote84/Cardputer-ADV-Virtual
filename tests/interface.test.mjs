@@ -37,9 +37,9 @@ test('le manifeste PWA et le service worker sont locaux et autonomes', async () 
   const sw = await read('../app/sw.js');
   assert.equal(manifest.name, 'Cardputer ADV Virtual');
   assert.equal(manifest.display, 'standalone');
+  assert.ok(manifest.icons.some((icon) => icon.src === './icons/cardputer.svg'));
   assert.ok(sw.includes("'./keyboard-layout.json'"));
-  assert.ok(sw.includes("'./icons/cardputer-192.png'"));
-  assert.ok(sw.includes("'./icons/cardputer-512.png'"));
+  assert.ok(sw.includes("'./icons/cardputer.svg'"));
   assert.ok(!sw.includes('https://'));
 });
 
