@@ -26,11 +26,15 @@ Le Cardputer ADV est dans le groupe des cartes de marque disponibles uniquement 
 
 ## Moteur ESP32-S3 : contrainte déterminante
 
-Le service `backend/app/services/esp_qemu_manager.py` indique qu'il lance un processus QEMU Xtensa pour ESP32 et ESP32-S3, charge le firmware comme image flash et utilise des canaux TCP pour UART et GPIO.
+Le chemin d'émulation ESP32 documenté par Velxio utilise principalement une bibliothèque QEMU partagée (`libqemu-xtensa`) chargée par le backend Python via `ctypes`. Le pont `backend/app/services/esp32_lib_bridge.py` décrit des callbacks pour GPIO, direction des broches, UART, I2C, SPI et RMT ; la documentation `docs/ESP32_EMULATION.md` mentionne également ADC, PWM/LEDC et Wi-Fi. Le backend lance la boucle QEMU dans un thread et raccorde ses événements au serveur de simulation.
 
-Ce fonctionnement est adapté à un backend de simulation. Il ne constitue pas directement un moteur embarqué dans une application Android hors ligne : il faut remplacer le lancement du processus serveur et les sockets distantes par un runtime local, ou démontrer une autre approche locale.
+Le fichier `backend/app/services/esp_qemu_manager.py` représente un chemin de repli plus simple : il lance un processus QEMU et expose notamment UART et GPIO par sockets TCP lorsque le mode bibliothèque n'est pas disponible. Il ne faut donc pas confondre ce chemin de repli avec le pont principal.
 
-La documentation `docs/BUILD-QEMU.md` du dépôt Velxio décrit la construction des bibliothèques QEMU et l'obtention de la source QEMU modifiée via le mécanisme de téléchargement sous licence Velxio. Elle annonce que l'archive source QEMU fournie est sous GPL-2.0. Aucun binaire ou archive QEMU n'a été importé dans ce dépôt pendant l'étape 1.
+Le moteur partagé est fourni dans les builds Velxio Linux/Docker et Windows ; la documentation publique ne fournit pas de build Android. Cela donne une base ESP32-S3 réelle à étudier, mais ne constitue pas directement un moteur embarqué dans une application Android hors ligne. Il faut porter et intégrer la bibliothèque QEMU adaptée pour un hôte Android ARM64, ou démontrer une autre approche locale.
+
+La documentation `docs/BUILD-QEMU.md` décrit la construction des bibliothèques et la mise à disposition de la source QEMU modifiée. Elle annonce que QEMU et les modifications correspondantes sont sous GPL-2.0 et que la source correspondante est disponible pour les destinataires des binaires. Aucun binaire ou archive QEMU n'a été importé dans ce dépôt pendant l'étape 1.
+
+À noter : une installation Velxio auto-hébergée peut fonctionner hors ligne une fois démarrée sur une machine hôte locale. Cela ne signifie pas que l'application complète et son backend sont déjà empaquetés pour tourner directement sur le Z Flip6.
 
 ## Licence et attribution
 
@@ -61,3 +65,13 @@ Une première preuve de concept doit démarrer un firmware ESP32-S3 de test, fou
 - Ne pas prétendre que le Cardputer ADV est pris en charge par l'image auto-hébergée.
 - Ne pas copier l'implémentation privée ou les assets en ligne.
 - Ne pas promettre une exécution universelle de tous les BIN.
+
+
+## Fichiers Velxio consultés
+
+- `README.md` : distinction entre cartes de l'image auto-hébergée et cartes du catalogue en ligne.
+- `frontend/src/lib/onlineOnlyBoards.ts` : commentaire indiquant que les moteurs et le câblage des cartes online-only ne sont pas dans l'arbre OSS.
+- `frontend/src/lib/proBoardRegistry.ts` : contrat d'extension pour les cartes fournies par une surcouche hébergée.
+- `backend/app/services/esp32_lib_bridge.py` : pont callback entre Python et `libqemu-xtensa`.
+- `backend/app/services/esp_qemu_manager.py` : moteur QEMU de repli via processus et sockets.
+- `docs/ESP32_EMULATION.md` et `docs/BUILD-QEMU.md` : capacités, plateformes, construction et informations de licence du moteur.
