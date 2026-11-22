@@ -72,7 +72,7 @@ export class TCA8418Device {
       if (address === TCA8418.REG_INT_STAT) {
         // INT_STAT uses write-one-to-clear. A non-empty FIFO keeps K_INT set.
         this.registers[address] &= (~value) & 0xff;
-        this.refreshKeyInterrupt();
+        if (this.queue.length > 0) this.registers[address] |= TCA8418.INT_KEY;
       } else if (address === TCA8418.REG_KEY_LCK_EC) {
         // The event count is read-only; key-lock bits are writable.
         this.registers[address] = (this.registers[address] & 0x0f) | (value & 0x70);
@@ -117,8 +117,8 @@ export class TCA8418Device {
   }
 
   refreshKeyInterrupt() {
+    // K_INT is latched until software clears INT_STAT with write-one-to-clear.
     if (this.queue.length > 0) this.registers[TCA8418.REG_INT_STAT] |= TCA8418.INT_KEY;
-    else this.registers[TCA8418.REG_INT_STAT] &= ~TCA8418.INT_KEY;
   }
 
   get irqAsserted() {
