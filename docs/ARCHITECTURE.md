@@ -77,3 +77,14 @@ Chaque périphérique possède l'un des états :
 - **Non pris en charge** : pas d'émulation ; un accès doit être signalé.
 
 Un firmware complet peut dépendre de périphériques et de fonctions sans modèle. La compatibilité est donc établie par version et configuration, pas seulement par extension de fichier.
+
+
+## Runtime choisi — étape 4
+
+Le worker `app/emulator/esp-emu-worker.mjs` charge l'API locale Espressif `WasmEmulator` avec la cible `esp32s3`, installe la ROM intégrée et passe l'image flash fusionnée à `load_firmware(Uint8Array)`. Le cycle d'exécution est géré par `CosimPump`; les chaînes de sortie série et les erreurs/fautes CPU remontent vers l'interface.
+
+Les ressources binaires ne sont pas versionnées dans le dépôt source par défaut. L'installateur télécharge uniquement l'archive WASM v1.2.0, vérifie son SHA-256 et n'extrait que les fichiers autorisés.
+
+### Limite de raccordement
+
+Espressif expose une co-simulation via des composants WebAssembly séparés (`CosimPump`). Les modèles JavaScript actuels de `app/emulator/` ne sont pas automatiquement visibles par le SoC virtuel. La création de composants spécifiques par bus (I²C pour TCA8418/BMI270/ES8311, SPI pour ST7789V2/SD, I²S pour audio) constitue le prochain travail technique de cette étape.
