@@ -68,7 +68,16 @@ def check_install(destination: Path) -> bool:
         return False
     metadata = json.loads(manifest.read_text(encoding="utf-8"))
     ok = metadata.get("version") == VERSION and metadata.get("archive_sha256") == EXPECTED_SHA256
-    print("ESP-EMU WebAssembly " + ("installé et vérifié." if ok else "présent, mais manifeste/version incorrecte."))
+    recorded_hashes = metadata.get("files_sha256", {})
+    if ok:
+        for name in REQUIRED:
+            expected = recorded_hashes.get(name)
+            actual = digest((destination / name).read_bytes())
+            if not expected or actual != expected:
+                print(f"Fichier runtime absent du manifeste ou altéré : {name}")
+                ok = False
+                break
+    print("ESP-EMU WebAssembly " + ("installé et vérifié." if ok else "présent, mais manifeste, version ou fichiers incorrects."))
     return ok
 
 
@@ -116,6 +125,10 @@ def main() -> int:
                     "archive_sha256": EXPECTED_SHA256,
                     "license": "Apache-2.0",
                     "release": "https://github.com/espressif/esp-emulator/releases/tag/v1.2.0",
+                    "files_sha256": {
+                        name: digest((staging / name).read_bytes())
+                        for name in sorted(REQUIRED)
+                    },
                 },
                 indent=2,
             ) + "\n",
