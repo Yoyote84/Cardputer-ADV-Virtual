@@ -66,6 +66,25 @@ try {
   });
 
   await page.goto(`${baseUrl}/app/`, { waitUntil: "networkidle" });
+  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  await page.reload({ waitUntil: "networkidle" });
+  const isControlled = await page.evaluate(() => Boolean(navigator.serviceWorker.controller));
+  assert.equal(isControlled, true, "La PWA doit être contrôlée par son service worker avant le test.");
+
+  const runtimeAssetsCached = await page.evaluate(async () => {
+    const cache = await caches.open("cardputer-adv-virtual-ui-v3-runtime");
+    const assets = [
+      "./vendor/esp-emu/runtime/pkg/esp_emu.js",
+      "./vendor/esp-emu/runtime/pkg/esp_emu_bg.wasm",
+      "./vendor/esp-emu/runtime/cosim.js",
+      "./vendor/esp-emu/runtime/vendor/esp_cosim_pb.js"
+    ];
+    return Promise.all(assets.map(async asset =>
+      Boolean(await cache.match(new URL(asset, location.href).href))
+    ));
+  });
+  assert.ok(runtimeAssetsCached.every(Boolean), "Les quatre éléments du moteur WASM doivent être mis en cache pour le mode hors ligne.");
+
   await page.locator("#firmware-file").setInputFiles(firmwarePath);
   await page.waitForFunction(() => {
     const info = document.querySelector("#firmware-file-info")?.textContent || "";
@@ -91,10 +110,26 @@ try {
     return status.includes("Exécution arrêtée");
   }, undefined, { timeout: 10000 });
 
+  // Reload with the network disabled to prove the engine and app shell are genuinely cached.
+  await page.context().setOffline(true);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator("#firmware-file").setInputFiles(firmwarePath);
+  await page.waitForFunction(() => (document.querySelector("#firmware-file-info")?.textContent || "").includes("SHA-256"), undefined, { timeout: 15000 });
+  await page.locator("#firmware-load").click();
+  await page.waitForFunction(() => {
+    const status = document.querySelector("#firmware-runtime-status");
+    return status?.dataset.state === "success" && status.textContent.includes("BIN chargé dans le moteur");
+  }, undefined, { timeout: 60000 });
+  await page.locator("#firmware-start").click();
+  await page.waitForFunction(() =>
+    (document.querySelector("#firmware-console")?.textContent || "").includes("CARDPUTER_RUNTIME_OK"),
+  undefined, { timeout: 90000 });
+
   assert.deepEqual(pageErrors, [], "Le navigateur a signalé des erreurs JavaScript.");
   console.log("PASS: BIN ESP32-S3 chargé dans ESP-EMU WebAssembly.");
   console.log("PASS: CPU Xtensa démarré et marqueur CARDPUTER_RUNTIME_OK reçu sur UART0.");
-  console.log("PASS: arrêt du CPU confirmé depuis l'interface Cardputer ADV Virtual.");
+  console.log("PASS: service worker a mis en cache le moteur WASM.");
+  console.log("PASS: second démarrage du firmware confirmé sans réseau.");
 } finally {
   if (browser) await browser.close();
   await new Promise(resolveClose => server.close(resolveClose));
