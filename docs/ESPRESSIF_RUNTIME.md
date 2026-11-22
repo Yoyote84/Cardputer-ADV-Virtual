@@ -35,8 +35,9 @@ Le runtime distribué n'est pas commité dans les sources par défaut. Pour publ
 2. Produire une image fusionnée flash avec `idf.py merge-bin -o build/merged-flash.bin`.
 3. Servir le dossier `app/` depuis HTTP(S), pas depuis `file://`.
 4. Choisir le fichier `.bin`, vérifier ses métadonnées et son SHA-256, puis cliquer sur **Importer le BIN**.
-5. Cliquer sur **Démarrer** et observer les sorties UART.
-6. **Reset CPU** relance l'image chargée ; **Arrêter** arrête la boucle d'exécution.
+5. Ajouter facultativement l'ELF Xtensa compilé avec ce firmware ; l'API `load_app_elf` permet de symboliser les rapports de faute.
+6. Cliquer sur **Démarrer** et observer les sorties UART. **Pas × 1000** exécute un lot d'environ 1 000 instructions puis met le CPU en pause.
+7. **Reset CPU** relance l'image chargée ; **Arrêter** arrête la boucle d'exécution.
 
 L'importeur limite la taille à la flash physique de 8 Mio, refuse les ELF utilisés par erreur comme BIN et inspecte les en-têtes ESP alignés sur les secteurs usuels. Les layouts fusionnés non reconnus sont signalés et laissés au contrôle du moteur. Un fichier accepté par l'importeur n'est pas déclaré compatible avant le démarrage réel.
 
@@ -44,7 +45,7 @@ L'importeur limite la taille à la flash physique de 8 Mio, refuse les ELF utili
 
 - Le moteur exécute le SoC ESP32-S3 et ses périphériques intégrés documentés par Espressif. Cela ne signifie pas que tous les périphériques propres au Cardputer ADV sont déjà raccordés.
 - Les modèles JS de l'étape 3 (TCA8418, ST7789V2, BMI270, ES8311, NS4150B, microSD) ne sont pas encore reliés au bus matériel du moteur. La co-simulation Espressif utilise des composants WebAssembly séparés ; les composants Cardputer correspondants doivent encore être écrits, raccordés et testés.
-- La console affiche les sorties UART. L'injection de caractères UART, l'import ELF pour symboles, le pas-à-pas et le débogueur Xtensa interactif restent à compléter.
+- La console affiche les sorties UART. L'import ELF optionnel ajoute les symboles pour les rapports de faute ; le pas manuel exécute un lot d'environ 1 000 instructions. L'injection de caractères UART et le débogueur Xtensa interactif avec registres/mémoire restent à compléter.
 - Aucun test sur le Galaxy Z Flip6 n'est revendiqué. La mémoire disponible et la vitesse réelle sur le téléphone restent à mesurer.
 - Le paquet PWA hors ligne ne sera complet qu'après installation du moteur et mise en cache de ses ressources WASM.
 - Aucune compatibilité totale du firmware Cardputer ADV n'est garantie avant les tests de référence sur une image compilée pour cette carte.
