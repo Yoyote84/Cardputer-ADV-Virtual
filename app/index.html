@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111a1a">
+  <meta name="description" content="Interface tactile locale du simulateur M5Stack Cardputer ADV.">
+  <meta name="application-name" content="Cardputer ADV Virtual">
+  <title>Cardputer ADV Virtual</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/cardputer.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#device">Aller au Cardputer virtuel</a>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-lockup" aria-label="Cardputer ADV Virtual">
+        <div class="brand-mark" aria-hidden="true">C<span>•</span>V</div>
+        <div class="brand-copy">
+          <strong>CARDPUTER <span>ADV</span> VIRTUAL</strong>
+          <small>LABORATOIRE DE SIMULATION</small>
+        </div>
+      </div>
+      <div class="header-status" id="header-status">
+        <span class="status-led" aria-hidden="true"></span>
+        <span>APERÇU LOCAL</span>
+      </div>
+    </header>
+
+    <main id="device" class="main-content">
+      <section class="intro-row" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">ÉTAPE 02 / 05 · INTERFACE</p>
+          <h1 id="page-title">Votre Cardputer, en virtuel.</h1>
+          <p class="intro-text">Touchez les 56 touches ou utilisez le clavier de votre téléphone. L’écran ci-dessous est un rendu UI de 240 × 135 pixels.</p>
+        </div>
+        <div class="stage-chip"><span>02</span><div><strong>INTERFACE</strong><small>Mode démonstration</small></div></div>
+      </section>
+
+      <section class="device-section" aria-label="Cardputer ADV virtuel">
+        <div class="device-caption">
+          <span><i class="caption-dot" aria-hidden="true"></i> M5STACK · K132-ADV</span>
+          <span>84 × 54 mm · ÉCHELLE VISUELLE</span>
+        </div>
+
+        <div class="device-shell" id="device-shell" data-power="on">
+          <div class="top-deck">
+            <div class="brand-panel">
+              <div class="brand-label">CARDPUTER</div>
+              <div class="brand-adv">ADV<span>_</span></div>
+              <div class="brand-micro">CARD SIZE COMPUTER</div>
+              <div class="brand-mic" aria-hidden="true"><span></span><i></i></div>
+            </div>
+
+            <div class="display-module">
+              <div class="display-bezel">
+                <canvas id="device-screen" width="240" height="135" role="img" aria-label="Écran du Cardputer ADV, 240 par 135 pixels"></canvas>
+              </div>
+              <div class="display-meta"><span>IPS · ST7789V2</span><span>240 × 135</span></div>
+            </div>
+
+            <div class="stamp-module" aria-label="Module Stamp S3A illustré">
+              <div class="stamp-board">
+                <div class="stamp-brand">STAMP <b>S3A</b></div>
+                <div class="stamp-chip">ESP32<br><strong>S3FN8</strong></div>
+                <div class="stamp-spec">DUAL CORE · 240 MHz<br>8 MB FLASH</div>
+                <div class="stamp-usb" aria-hidden="true"></div>
+                <div class="stamp-pins" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              </div>
+              <span class="stamp-caption">M5STACK CORE</span>
+            </div>
+          </div>
+
+          <div class="keyboard-panel">
+            <div class="keyboard-topline"><span>56-KEY KEYBOARD</span><span>TCA8418 · I²C 0x34</span></div>
+            <div id="keyboard" class="keyboard-grid" role="group" aria-label="Clavier Cardputer ADV à 56 touches">
+              <div class="keyboard-loading">Chargement du clavier…</div>
+            </div>
+          </div>
+          <div class="device-screws" aria-hidden="true"><span></span><span></span></div>
+        </div>
+
+        <div class="device-note"><span>SIMULATEUR D’INTERFACE</span><span id="power-label">ÉCRAN ALLUMÉ</span></div>
+      </section>
+
+      <section class="control-row" aria-label="Commandes de l'interface">
+        <div class="control-group">
+          <button id="power-button" class="control-button control-button--power" type="button" aria-pressed="true"><span class="button-icon" aria-hidden="true">⏻</span><span>Alimentation</span></button>
+          <button id="reset-button" class="control-button" type="button"><span class="button-icon" aria-hidden="true">↻</span><span>Réinitialiser l’UI</span></button>
+        </div>
+        <button id="fullscreen-button" class="control-button control-button--quiet" type="button"><span class="button-icon" aria-hidden="true">⛶</span><span>Plein écran</span></button>
+      </section>
+
+      <section class="status-grid" aria-label="État de l'interface">
+        <article class="status-card">
+          <div class="status-card-heading"><span>SESSION</span><span class="tiny-tag">LOCAL</span></div>
+          <strong id="session-state">Interface active</strong>
+          <small>Les interactions sont traitées sur l’appareil.</small>
+        </article>
+        <article class="status-card">
+          <div class="status-card-heading"><span>PROCESSEUR</span><span class="tiny-tag tiny-tag--muted">ÉTAPE 4</span></div>
+          <strong>ESP32-S3 non émulé</strong>
+          <small>Aucun firmware BIN n’est exécuté à cette étape.</small>
+        </article>
+        <article class="status-card">
+          <div class="status-card-heading"><span>CLAVIER</span><span class="tiny-tag" id="modifier-state">PRÊT</span></div>
+          <strong id="last-key">En attente d’une touche</strong>
+          <small id="modifier-summary">FN désactivé · Aa désactivé</small>
+        </article>
+      </section>
+
+      <section class="event-panel" aria-labelledby="events-title">
+        <div class="event-panel-header">
+          <div><p class="eyebrow">MONITEUR D’ENTRÉE</p><h2 id="events-title">Événements clavier</h2></div>
+          <button id="clear-events" class="text-button" type="button">Effacer</button>
+        </div>
+        <ol id="event-log" class="event-log" aria-live="polite" aria-relevant="additions">
+          <li class="empty-event">Touchez une touche pour voir son événement ici.</li>
+        </ol>
+        <p class="event-footnote">Les événements sont exposés via <code>cardputer:keyboard</code> pour être raccordés au moteur dans les étapes suivantes.</p>
+      </section>
+
+      <aside class="scope-note" aria-label="Périmètre de cette étape">
+        <span class="scope-icon" aria-hidden="true">i</span>
+        <p><strong>Ce qui est prêt :</strong> coque visuelle, écran logique, clavier tactile et émission d’événements. <strong>Ce qui n’est pas encore prêt :</strong> exécution du processeur, pilotes matériels et import de firmware. Ils arrivent aux étapes 3 et 4.</p>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <span>CARDPUTER ADV VIRTUAL</span>
+      <span>INTERFACE LOCALE · SANS RESSOURCE EXTERNE</span>
+    </footer>
+  </div>
+</body>
+</html>
