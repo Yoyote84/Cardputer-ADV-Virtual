@@ -120,13 +120,19 @@
         <label class="firmware-file-label" for="firmware-file">Fichier firmware (.bin)</label>
         <input id="firmware-file" class="firmware-file-input" type="file" accept=".bin,application/octet-stream">
         <p id="firmware-file-info" class="firmware-file-info" aria-live="polite">Aucun firmware sélectionné.</p>
+        <label class="firmware-file-label" for="firmware-elf-file">Symboles de débogage (ELF Xtensa, facultatif)</label>
+        <input id="firmware-elf-file" class="firmware-file-input" type="file" accept=".elf,application/octet-stream">
+        <p id="firmware-elf-info" class="firmware-file-info" aria-live="polite">Aucun ELF sélectionné.</p>
         <div class="firmware-controls">
           <button id="firmware-load" class="control-button" type="button" disabled>Importer le BIN</button>
+          <button id="firmware-elf-load" class="control-button" type="button" disabled>Importer ELF</button>
           <button id="firmware-start" class="control-button control-button--power" type="button" disabled>Démarrer</button>
+          <button id="firmware-step" class="control-button" type="button" disabled>Pas × 1000</button>
           <button id="firmware-reset" class="control-button" type="button" disabled>Reset CPU</button>
           <button id="firmware-stop" class="control-button control-button--quiet" type="button" disabled>Arrêter</button>
         </div>
         <p id="firmware-runtime-status" class="firmware-runtime-status" data-state="info" aria-live="polite">Installe d’abord le moteur ESP-EMU WebAssembly 1.2.0 avec l’instruction indiquée dans la documentation.</p>
+        <p id="firmware-metrics" class="firmware-file-info">Cycles CPU : — · Temps émulé : —</p>
         <div class="firmware-console-heading"><strong>Console UART</strong><span id="firmware-engine-label">CPU non démarré</span></div>
         <pre id="firmware-console" class="firmware-console" aria-live="polite">En attente d’un firmware…</pre>
         <p class="firmware-footnote">La console affiche les sorties UART réellement émises par le firmware. Les périphériques spécifiques du Cardputer (ST7789V2, TCA8418, IMU et audio) sont encore à raccorder au CPU émulé ; leurs modèles de l’étape 3 restent disponibles séparément.</p>
