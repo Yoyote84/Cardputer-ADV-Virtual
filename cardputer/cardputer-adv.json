@@ -80,7 +80,8 @@
     "i2c_address": 24,
     "i2c_address_source": "M5Unified ES8311 default address and Cardputer ADV shared internal I2C bus",
     "mclk_pin": null,
-    "mclk_source": "BCLK (GPIO41) is used as MCLK; no separate MCLK pin is routed"
+    "mclk_source": "BCLK",
+    "mclk_note": "GPIO41 (BCLK/SCLK) is used as MCLK; the Cardputer ADV schematic has no separate MCLK line."
   },
   "infrared": {
     "transmitter_pin": 44
