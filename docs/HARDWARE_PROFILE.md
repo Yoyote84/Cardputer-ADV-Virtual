@@ -52,6 +52,8 @@ Résolution logique : 240 × 135 pixels. Le simulateur conservera ce framebuffer
 | I2C SDA | G8 |
 | I2C SCL | G9 |
 | Interruption clavier TCA8418 | G11 |
+
+Le keymap de référence communautaire utilise l'adresse I2C 7 bits `0x34` pour le TCA8418. Cette adresse est notée à titre provisoire et devra être confirmée sur le Cardputer ADV physique ou dans les sources officielles avant de valider le pilote virtuel.
 | Contrôleur clavier | TCA8418RTWR |
 | Capteur de mouvement | BMI270 |
 
