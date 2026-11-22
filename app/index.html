@@ -25,18 +25,18 @@
       </div>
       <div class="header-status" id="header-status">
         <span class="status-led" aria-hidden="true"></span>
-        <span>APERÇU LOCAL</span>
+        <span>MODÈLES MATÉRIELS LOCAUX</span>
       </div>
     </header>
 
     <main id="device" class="main-content">
       <section class="intro-row" aria-labelledby="page-title">
         <div>
-          <p class="eyebrow">ÉTAPE 02 / 05 · INTERFACE</p>
-          <h1 id="page-title">Votre Cardputer, en virtuel.</h1>
-          <p class="intro-text">Touchez les 56 touches ou utilisez le clavier de votre téléphone. L’écran ci-dessous est un rendu UI de 240 × 135 pixels.</p>
+          <p class="eyebrow">ÉTAPE 03 / 05 · PÉRIPHÉRIQUES</p>
+          <h1 id="page-title">Le matériel virtuel prend vie.</h1>
+          <p class="intro-text">Les touches transitent par le contrôleur TCA8418 virtuel. L’écran est envoyé au contrôleur ST7789V2 virtuel en RGB565.</p>
         </div>
-        <div class="stage-chip"><span>02</span><div><strong>INTERFACE</strong><small>Mode démonstration</small></div></div>
+        <div class="stage-chip"><span>03</span><div><strong>MATÉRIEL</strong><small>Modèles locaux</small></div></div>
       </section>
 
       <section class="device-section" aria-label="Cardputer ADV virtuel">
@@ -74,7 +74,7 @@
           </div>
 
           <div class="keyboard-panel">
-            <div class="keyboard-topline"><span>56-KEY KEYBOARD</span><span>TCA8418 · I²C 0x34</span></div>
+            <div class="keyboard-topline"><span>CLAVIER ADV · 56 TOUCHES</span><span>TCA8418 · FIFO 10 · I²C 0x34</span></div>
             <div id="keyboard" class="keyboard-grid" role="group" aria-label="Clavier Cardputer ADV à 56 touches">
               <div class="keyboard-loading">Chargement du clavier…</div>
             </div>
@@ -119,12 +119,23 @@
         <ol id="event-log" class="event-log" aria-live="polite" aria-relevant="additions">
           <li class="empty-event">Touchez une touche pour voir son événement ici.</li>
         </ol>
-        <p class="event-footnote">Les événements sont exposés via <code>cardputer:keyboard</code> pour être raccordés au moteur dans les étapes suivantes.</p>
+        <p class="event-footnote">Chaque événement provient du FIFO matériel virtuel TCA8418 (adresse I²C 0x34) avant d’être exposé via <code>cardputer:keyboard</code>.</p>
+      </section>
+
+      <section class="peripheral-panel" aria-labelledby="peripheral-title">
+        <div class="event-panel-header">
+          <div><p class="eyebrow">ÉTAPE 03 / 05 · BANC DE TEST</p><h2 id="peripheral-title">Périphériques virtuels</h2></div>
+          <button id="run-hardware-test" class="control-button control-button--quiet" type="button">Tester le matériel</button>
+        </div>
+        <div id="peripheral-list" class="peripheral-list" aria-live="polite">
+          <p class="empty-event">Initialisation des modèles matériels…</p>
+        </div>
+        <p id="hardware-test-result" class="hardware-test-result" aria-live="polite">Les contrôles vérifient les modèles logiciels, pas encore un firmware ESP32-S3.</p>
       </section>
 
       <aside class="scope-note" aria-label="Périmètre de cette étape">
         <span class="scope-icon" aria-hidden="true">i</span>
-        <p><strong>Ce qui est prêt :</strong> coque visuelle, écran logique, clavier tactile et émission d’événements. <strong>Ce qui n’est pas encore prêt :</strong> exécution du processeur, pilotes matériels et import de firmware. Ils arrivent aux étapes 3 et 4.</p>
+        <p><strong>Modélisé :</strong> FIFO TCA8418, commandes ST7789V2, registres de base BMI270/ES8311, SD SPI en blocs, GPIO, ADC brut et capture IR. <strong>Pas encore émulé :</strong> CPU ESP32-S3, configuration avancée Bosch, audio analogique, FAT et exécution de BIN. Le moteur CPU arrive à l’étape 4.</p>
       </aside>
     </main>
 
