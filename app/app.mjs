@@ -543,6 +543,7 @@ function handleRuntimeMessage(event) {
     $("#firmware-stop").disabled = true;
     $("#firmware-step").disabled = false;
     $("#firmware-load").disabled = false;
+    $("#firmware-elf-load").disabled = !state.selectedElf;
     setFirmwareRuntimeStatus(`BIN chargé dans le moteur ${message.engine} (${message.target}). Le démarrage exécute le CPU Xtensa.`, "success");
     addEvent("RUNTIME", "Firmware chargé dans ESP32-S3");
     drawScreen();
