@@ -1,0 +1,66 @@
+name: ESP32-S3 runtime browser smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install pinned ESP-EMU WebAssembly runtime
+        run: |
+          python tools/install_esp_emu.py
+          python tools/install_esp_emu.py --check
+
+      - name: Build real ESP32-S3 test firmware
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/esp32s3-runtime-smoke:/project" \
+            -w /project \
+            espressif/idf:release-v5.4 idf.py set-target esp32s3
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/esp32s3-runtime-smoke:/project" \
+            -w /project \
+            espressif/idf:release-v5.4 idf.py build
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/esp32s3-runtime-smoke:/project" \
+            -w /project \
+            espressif/idf:release-v5.4 idf.py merge-bin -o build/merged-flash.bin
+
+      - name: Install browser test dependency
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Run ESP32-S3 firmware in the application worker
+        run: npm run test:runtime
+
+      - name: Upload runnable PWA with its offline runtime
+        uses: actions/upload-artifact@v4
+        with:
+          name: cardputer-adv-virtual-pwa-runtime
+          path: app/
+          if-no-files-found: error
+          retention-days: 30
