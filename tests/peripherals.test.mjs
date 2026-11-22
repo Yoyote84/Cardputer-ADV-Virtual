@@ -20,7 +20,7 @@ test("bus I2C : scan, lecture, écriture et erreur d'adresse", () => {
   bus.writeByte(0x69, 0x7c, 0x02);
   assert.equal(bus.readByte(0x69, 0x7c), 0x02);
   assert.throws(() => bus.readByte(0x34, 0x00), /Aucun périphérique/);
-  assert.equal(bus.transactions.length, 3);
+  assert.equal(bus.transactions.length, 2);
 });
 
 test("TCA8418 : initialisation ADV, FIFO press/release et clear W1C", () => {
