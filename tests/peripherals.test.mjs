@@ -7,6 +7,7 @@ import { TCA8418, TCA8418Device } from "../app/emulator/tca8418.mjs";
 import { ST7789V2Device } from "../app/emulator/st7789v2.mjs";
 import { BMI270Device } from "../app/emulator/bmi270.mjs";
 import { ES8311Device } from "../app/emulator/es8311.mjs";
+import { NS4150BAmplifier } from "../app/emulator/ns4150b.mjs";
 import { SDSpiCard } from "../app/emulator/sd-spi-card.mjs";
 import { VirtualGPIOBank, BatteryADCModel, InfraredTransmitter } from "../app/emulator/simple-peripherals.mjs";
 import { createCardputerDeviceRack } from "../app/emulator/device-rack.mjs";
@@ -136,6 +137,16 @@ test("ES8311 : identifiant, registres de contrôle et flux I2S numérique", () =
   assert.equal(codec.status.analoguePathEmulated, false);
 });
 
+
+test("NS4150B : amplification numérique, mute et saturation des échantillons", () => {
+  const amplifier = new NS4150BAmplifier({ gain: 2, enabled: true });
+  assert.deepEqual([...amplifier.process([100, -100, 20000])], [200, -200, 32767]);
+  assert.equal(amplifier.status.clippedSamples, 1);
+  amplifier.setEnabled(false);
+  assert.deepEqual([...amplifier.process([100, -100])], [0, 0]);
+  assert.equal(amplifier.status.enabled, false);
+});
+
 test("bus I2S : transfert de blocs à un codec enregistré", () => {
   const bus = new VirtualI2SBus();
   const codec = new ES8311Device();
@@ -168,6 +179,13 @@ test("microSD SPI : init SDHC, write single block puis read single block", () =>
   assert.equal(command(55), 0x01);
   assert.equal(command(41, 0x40000000), 0x00);
   assert.equal(command(58), 0x00);
+
+  assert.equal(command(9), 0x00); // Read CSD v2
+  assert.equal(card.transfer(0xff), 0xfe);
+  const csd = Uint8Array.from({ length: 16 }, () => card.transfer(0xff));
+  assert.equal(csd[0] & 0xc0, 0x40);
+  card.transfer(0xff);
+  card.transfer(0xff);
 
   assert.equal(command(24, 1), 0x00);
   card.transfer(0xfe);
@@ -210,6 +228,9 @@ test("rack Cardputer ADV : tous les composants I2C apparaissent aux adresses att
   assert.equal(result.st7789v2.present, true);
   assert.equal(result.bmi270.present, true);
   assert.equal(result.es8311.present, true);
+  assert.equal(result.audioAmplifier.enabled, true);
   assert.equal(result.microSD.present, true);
+  assert.equal(result.microSD.capacityBytes, 128_000_000_000);
+  assert.equal(result.microSD.allocatedBlocks, 0);
   assert.equal(result.extensionPorts.ext.length, 14);
 });
