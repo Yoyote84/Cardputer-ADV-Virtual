@@ -19,5 +19,9 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.x"
-      - name: Validate profile
+      - name: Check interface JavaScript syntax
+        run: node --check app/app.js
+      - name: Test Cardputer interface contract
+        run: node --test tests/interface.test.mjs
+      - name: Validate hardware profile
         run: python tools/validate_profile.py
