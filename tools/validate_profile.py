@@ -48,10 +48,25 @@ def main() -> None:
     ):
         fail("profil du clavier incohérent")
 
-    if data.get("imu", {}).get("controller") != "BMI270":
+    keyboard = data.get("keyboard", {})
+    if keyboard.get("i2c_address") != 0x34:
+        fail("TCA8418 doit utiliser l'adresse I2C 0x34")
+
+    imu = data.get("imu", {})
+    if imu.get("controller") != "BMI270":
         fail("contrôleur IMU attendu : BMI270")
-    if data.get("audio", {}).get("codec") != "ES8311":
+    if imu.get("i2c_address") != 0x69:
+        fail("BMI270 du Cardputer ADV doit utiliser l'adresse I2C 0x69")
+    if imu.get("interrupt_routed") is not False:
+        fail("INT1/INT2 du BMI270 ne sont pas routées sur le schéma ADV v1.0")
+
+    audio = data.get("audio", {})
+    if audio.get("codec") != "ES8311":
         fail("codec audio attendu : ES8311")
+    if audio.get("i2c_address") != 0x18:
+        fail("ES8311 doit utiliser l'adresse I2C 0x18")
+    if audio.get("mclk_pin") is not None or audio.get("mclk_source") != "BCLK (GPIO41) is used as MCLK; no separate MCLK pin is routed":
+        fail("l'ES8311 du Cardputer ADV doit utiliser BCLK GPIO41 comme MCLK et ne pas inventer de pin MCLK")
     if data.get("battery", {}).get("capacity_mah") != 1500:
         fail("la capacité doit suivre la fiche M5Stack actuelle : 1500 mAh")
 
