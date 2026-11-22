@@ -30,11 +30,27 @@
 - [x] Huit tests automatisés réussis sur Node.js.
 - [ ] Essai manuel sur le vrai Z Flip6 en portrait et paysage.
 
+## Étape 3/5 — Modèles matériels Cardputer ADV
+
+**Statut : socle de modèles logiciels livré ; aucun firmware natif n'est encore exécuté.**
+
+- [x] Bus I²C, SPI et I²S local.
+- [x] Clavier mappé sur les 56 touches physiques et modèle TCA8418 avec FIFO.
+- [x] Écran ST7789V2 et framebuffer RGB565 240×135.
+- [x] Modèles de registres/mesures de base BMI270 et ES8311.
+- [x] Modèle numérique NS4150B et injection d'échantillons microphone.
+- [x] microSD SPI SDHC avec CSD v2, blocs sparse et capacité annoncée de 128 Go.
+- [x] GPIO, ADC batterie, capture IR et table Grove/EXT.
+- [x] Rack de périphériques et panneau de diagnostic dans l'interface.
+- [x] Tests automatisés des modèles matériels ajoutés.
+- [ ] Comparaison tactile/visuelle sur le vrai Z Flip6.
+- [ ] Modèle SX1262/GNSS optionnel non inclus au socle.
+
+**Limite majeure :** aucun firmware BIN n'est encore exécuté. Le runtime ESP32-S3 et son raccordement aux bus restent l'étape 4.
+
 ## Pas encore implémenté
 
-- [ ] Modèle de clavier TCA8418 (le clavier UI est présent, le contrôleur matériel n'est pas encore émulé).
-- [ ] Modèle d'écran ST7789V2 piloté par le firmware.
-- [ ] Modèles BMI270, ES8311, microSD, batterie, IR et extensions.
+- [ ] Modèles avancés/électriques non couverts : configuration complète BMI270, chemin analogique ES8311/NS4150B, CRC/modes SD complets et module SX1262/GNSS.
 - [ ] Runtime ESP32-S3 local Android.
 - [ ] Import et exécution de BIN.
 - [ ] Validation PWA installée sur le Z Flip6 ; l'interface possède pour l'instant les fichiers du manifeste et du service worker.
