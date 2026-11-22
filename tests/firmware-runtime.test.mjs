@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { webcrypto } from "node:crypto";
-import { inspectFirmwareImage, MAX_FLASH_BYTES, sha256Hex, formatBytes } from "../app/emulator/firmware-image.mjs";
+import { inspectFirmwareImage, inspectElfImage, MAX_FLASH_BYTES, sha256Hex, formatBytes } from "../app/emulator/firmware-image.mjs";
 
 function makeEspImage() {
   const bytes = new Uint8Array(36);
@@ -62,4 +62,19 @@ test("format de taille lisible", () => {
   assert.equal(formatBytes(512), "512 o");
   assert.equal(formatBytes(2048), "2.0 Kio");
   assert.equal(formatBytes(2 * 1024 * 1024), "2.00 Mio");
+});
+
+
+test("import ELF: les symboles Xtensa 32 bits sont identifiés", () => {
+  const elf = new Uint8Array(64);
+  elf.set([0x7f, 0x45, 0x4c, 0x46, 1, 1]);
+  elf[18] = 94;
+  assert.equal(inspectElfImage(elf, { filename: "cardputer.elf" }).machine, "Xtensa");
+});
+
+test("import ELF: les architectures incompatibles sont refusées", () => {
+  const elf = new Uint8Array(64);
+  elf.set([0x7f, 0x45, 0x4c, 0x46, 1, 1]);
+  elf[18] = 3;
+  assert.throws(() => inspectElfImage(elf), /Xtensa attendu/);
 });
