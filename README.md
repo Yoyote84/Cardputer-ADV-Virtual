@@ -2,9 +2,9 @@
 
 Simulateur dédié au **M5Stack Cardputer ADV (K132-Adv)**, avec pour cible d'utilisation un Samsung Galaxy Z Flip6 et un fonctionnement hors ligne.
 
-> **État du projet : étape 3/5 — modèles matériels logiciels livrés ; 23 tests automatisés réussis. Vérification sur le Galaxy Z Flip6 à effectuer.**
+> **État du projet : étape 4/5 — intégration du runtime ESP32-S3 déposée ; démarrage d'un firmware réel à valider.**
 >
-> Le dépôt contient l'interface PWA, le clavier réel mappé depuis un relevé matériel public et les modèles logiciels des bus et périphériques Cardputer ADV. Le runtime ESP32-S3 n'est pas encore intégré : aucune image BIN Cardputer n'est exécutée à cette étape.
+> Le dépôt contient l'interface PWA, les modèles matériels Cardputer ADV, l'importeur BIN/ELF, le worker ESP-EMU 1.2.0 et son installateur vérifié SHA-256. Le moteur n'est pas encore validé avec un firmware réel ; les périphériques spécifiques du Cardputer ne sont pas encore raccordés au CPU et les essais sur Galaxy Z Flip6 restent à faire.
 
 ## Objectif final
 
@@ -22,7 +22,7 @@ Pour lancer un aperçu local depuis la racine du dépôt :
 python3 -m http.server 8080 --directory app
 ```
 
-Ouvrir `http://localhost:8080`. Pour l'installation PWA et le cache hors ligne, servir le dossier `app/` depuis une origine HTTPS. Le cache contient l'interface, la feuille de style, le script et le keymap. Il ne contient pas de moteur de simulation.
+Ouvrir `http://localhost:8080`. Pour l'installation PWA et le cache hors ligne, servir le dossier `app/` depuis une origine HTTPS. Le service worker met en cache les ressources de l'interface et du worker. Le bundle WASM ESP-EMU n'est pas commité : il doit être installé avec `python3 tools/install_esp_emu.py`. Le comportement entièrement hors ligne après cette installation reste à vérifier.
 
 Voir [les instructions de prévisualisation](README-PREVIEW.md) et [le contrat du clavier](docs/KEYBOARD_INTERFACE.md).
 
@@ -37,6 +37,7 @@ node --check app/app.js
 node --check app/app.mjs
 for file in app/emulator/*.mjs; do node --check "$file"; done
 node --test tests/*.test.mjs
+python3 -m unittest discover -s tests -p "test_*.py"
 python3 tools/validate_profile.py
 \`\`\`
 
@@ -71,7 +72,7 @@ Les détails et brochages sont dans [le profil matériel](docs/HARDWARE_PROFILE.
 | 1/5 | Audit de Velxio, étude du matériel, architecture, structure et validation du profil | **Terminée** |
 | 2/5 | Interface du Cardputer virtuel : boîtier, écran, clavier et interactions tactiles | **Livrée — essai sur Z Flip6 à confirmer** |
 | 3/5 | Modèles des périphériques : I2C, écran, clavier, IMU, audio, batterie, microSD et extensions | **Socle logiciel livré — couverture partielle documentée** |
-| 4/5 | Moteur ESP32-S3 local, import BIN/ELF, démarrage, console et débogage | À faire |
+| 4/5 | Moteur ESP32-S3 local, import BIN/ELF, démarrage, console et débogage | **Intégration logicielle déposée — démarrage réel à valider** |
 | 5/5 | Intégration finale, mode hors ligne, tests de compatibilité et paquet Android installable | À faire |
 
 Les critères de sortie de chaque étape sont détaillés dans [ROADMAP.md](ROADMAP.md).
@@ -81,8 +82,8 @@ Les critères de sortie de chaque étape sont détaillés dans [ROADMAP.md](ROAD
 - `app/` : interface PWA, écran ST7789V2 virtuel, clavier TCA8418 de 56 touches et modèles de périphériques dans `app/emulator/`.
 - `cardputer/` : profil matériel et schéma de validation.
 - `docs/` : audit, architecture, compatibilité, décisions et état d'avancement.
-- `tools/` : validation locale du profil matériel.
-- `tests/` : tests Node intégrés pour le mapping réel, le rendu responsive, les bus et les périphériques.
+- `tools/` : validation locale du profil matériel et installateur vérifié du runtime ESP-EMU.
+- `tests/` : tests Node pour l'interface, les périphériques et l'import BIN/ELF ; tests Python pour la sécurité de l'installateur du runtime.
 - `.github/workflows/` : validation du profil matériel et des contrats d'interface à chaque push et pull request.
 
 ## Vérifier le projet
