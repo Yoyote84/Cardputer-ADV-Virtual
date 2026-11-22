@@ -116,3 +116,10 @@ La validation contrôle les champs matériels essentiels et les correspondances 
 ## Licence
 
 Ce projet est publié sous **GNU AGPL v3.0**. Les composants tiers conservent leurs licences et mentions propres. Voir [NOTICE.md](NOTICE.md) pour les règles d'attribution et l'état des éléments tiers.
+
+
+## Étape 4/5 — Runtime CPU et chargement firmware
+
+Le moteur ESP32-S3 retenu est [Espressif esp-emu 1.2.0](https://github.com/espressif/esp-emulator/releases/tag/v1.2.0). Installe son bundle WebAssembly avec `python3 tools/install_esp_emu.py`, puis vérifie avec `python3 tools/install_esp_emu.py --check`. Le panneau **Charger un firmware** inspecte le BIN (maximum 8 Mio), calcule son SHA-256 et fournit les commandes d'exécution et une console UART.
+
+**Important :** l'intégration du worker et de l'importeur est déposée, mais l'exécution d'un firmware réel n'est pas encore validée. Les périphériques Cardputer ADV spécifiques ne sont pas encore raccordés au moteur. Voir [la documentation du runtime](docs/ESPRESSIF_RUNTIME.md).
