@@ -52,11 +52,9 @@ export class TCA8418Device {
       const address = register + index;
       if (address === TCA8418.REG_KEY_LCK_EC) {
         out[index] = (this.registers[address] & 0x70) | (this.queue.length & 0x0f);
-      } else if (address === TCA8418.REG_KEY_EVENT_A) {
+      } else if (address >= TCA8418.REG_KEY_EVENT_A && address <= 0x0d) {
         out[index] = this.queue.length ? this.queue.shift() : 0x00;
         this.refreshKeyInterrupt();
-      } else if (address > TCA8418.REG_KEY_EVENT_A && address <= 0x0d) {
-        out[index] = this.queue[address - TCA8418.REG_KEY_EVENT_A] ?? 0x00;
       } else {
         out[index] = this.registers[address] ?? 0x00;
       }
