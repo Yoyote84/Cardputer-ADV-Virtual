@@ -59,7 +59,8 @@
     },
     "i2c_address": 105,
     "i2c_address_source": "M5Stack Cardputer ADV v1.0 schematic sheet 3: BMI270 U7 SDO pulled high by R43; printed address 69H",
-    "interrupt_routed": false
+    "interrupt_routed": false,
+    "interrupt_note": "BMI270 INT1 and INT2 are not routed in Cardputer ADV v1.0 schematic"
   },
   "audio": {
     "codec": "ES8311",
