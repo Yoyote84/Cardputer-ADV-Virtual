@@ -1,12 +1,14 @@
 'use strict';
 
-const CACHE_NAME = 'cardputer-adv-virtual-ui-v1';
+const CACHE_NAME = 'cardputer-adv-virtual-ui-v2';
 const APP_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './app.mjs',
+  './emulator/firmware-image.mjs',
+  './emulator/esp-emu-worker.mjs',
   './keyboard-layout.json',
   './emulator/i2c-bus.mjs',
   './emulator/spi-bus.mjs',
