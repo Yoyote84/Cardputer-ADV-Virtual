@@ -23,6 +23,14 @@ Le guide Velxio de construction QEMU renvoie à une archive source QEMU adaptée
 - Utilisation dans ce projet : référence du positionnement des touches, des codes et de quelques combinaisons Fn ; aucun code source du pilote n'a été copié.
 - Les détails matériels de l'interface TCA8418 (FIFO, registres, interruptions et timings) seront modélisés et vérifiés séparément à l'étape 3.
 
+## Modèles et documentation des périphériques
+
+- **TCA8418** : la disposition 4 × 14, l'adresse 0x34 et les codes FIFO du clavier viennent de [kamrrillo/Cardputer-ADV-Keyboard](https://github.com/kamrrillo/Cardputer-ADV-Keyboard), publié sous licence MIT. Seuls les faits matériels et le mapping sont repris ; le code source du pilote n'est pas copié.
+- **TCA8418 datasheet** : [Texas Instruments, SCPS215G](https://www.ti.com/lit/ds/symlink/tca8418.pdf), référence technique du modèle de registres et de FIFO.
+- **BMI270** : [Bosch Sensortec datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf), référence pour le CHIP_ID, les registres et l'initialisation. L'image de configuration Bosch n'est pas copiée ni incluse.
+- **ES8311** : [Everest Semiconductor product brief](https://www.everest-semi.com/pdf/ES8311%20PB.pdf), référence fonctionnelle du codec. Le modèle de ce projet n'intègre aucun code tiers du codec.
+- **ST7789V2, microSD, GPIO, ADC et IR** : modèles indépendants écrits à partir des spécifications publiques et du profil M5Stack ; aucune source QEMU ou bibliothèque de pilote propriétaire n'est intégrée.
+
 ## M5Stack Cardputer ADV
 
 Les dimensions, composants et brochages du profil matériel proviennent de la [documentation officielle M5Stack](https://docs.m5stack.com/en/core/Cardputer-Adv). M5Stack et Cardputer sont des marques de leurs propriétaires respectifs. Ce dépôt est un projet communautaire indépendant et n'est ni affilié à M5Stack ni approuvé par M5Stack.
