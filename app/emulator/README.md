@@ -10,7 +10,7 @@ Les classes de ce dossier sont des modèles déterministes du matériel de base 
 | ST7789V2 | SPI CS GPIO37 + DC GPIO34 | Commandes reset/sleep/display, fenêtre CASET/RASET, COLMOD RGB565, RAMWR, framebuffer 240×135 |
 | BMI270 | I²C 0x69 | CHIP_ID, ERR_REG, STATUS, données brutes accel/gyro, commandes reset et suivi du transfert de configuration |
 | ES8311 | I²C 0x18 + flux I²S | Registres de contrôle 0x00–0x45, ID de puce 0x83/0x11/0x00, files d'échantillons I²S lecture/écriture |
-| microSD | SPI CS GPIO12 | Initialisation SPI (CMD0/CMD8/CMD55/ACMD41/CMD58), CMD16, CMD17, CMD24 et stockage bloc volatil |
+| microSD | SPI CS GPIO12 | Initialisation SPI (CMD0/CMD8/CMD55/ACMD41/CMD58), CSD v2 (CMD9), CMD16, CMD17, CMD24 et stockage bloc sparse de 128 Go |
 | GPIO | GPIO0–48 | Modes, entrées/sorties numériques, valeurs ADC contrôlables et changements |
 | Batterie | ADC GPIO10 | Échantillon brut contrôlable ; pas de calibration tension/pourcentage inventée |
 | IR TX | GPIO44 | Capture de trames de durées et fréquence porteuse demandées |
@@ -35,7 +35,7 @@ Le composant est initialisé selon la séquence du pilote ADV : KP_GPIO1=0xFF, K
 - Le ST7789V2 modèle les commandes et la mémoire graphique, sans timings SPI, tearing, variations d'alimentation/rétroéclairage ni toutes les commandes du contrôleur.
 - Le BMI270 expose les registres d'identité, statut et axes. L'image de configuration Bosch nécessaire à l'activation complète des fonctions embarquées n'est pas fournie : l'algorithme de mouvement, les fonctions avancées, FIFO et interruptions capteur ne sont pas annoncés comme émulés.
 - L'ES8311 accepte les écritures de registres et des blocs d'échantillons I²S. Le circuit analogique, les timings de bit clock et le haut-parleur NS4150B ne sont pas émulés électriquement.
-- La microSD est un bloc-device SPI en RAM volatile. Le FAT/FAT32 est fourni plus tard par la pile logicielle/firmware ou une couche de stockage dédiée ; le modèle ne prétend pas être une carte SD de 128 Go.
+- La microSD est un bloc-device SPI en RAM volatile. Le stockage annoncé fait 128 Go décimaux, comme la carte physique visée. Les secteurs sont creux (sparse) : 128 Go sont annoncés dans le CSD sans réserver cette quantité de RAM ; seuls les blocs écrits sont alloués. Le système FAT/FAT32 est géré par la pile logicielle/firmware de l'invité ; le modèle matériel fournit les blocs via SPI. Le CRC de données n'est pas validé.
 - La batterie expose le raw ADC sur GPIO10. La relation ADC → tension → pourcentage nécessite calibration matérielle.
 - Le transmetteur IR capture les trames logiques, sans modéliser le rayonnement ou la propagation.
 
