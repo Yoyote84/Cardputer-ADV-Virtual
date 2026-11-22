@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="case" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1f2eb"/>
+      <stop offset="1" stop-color="#b9c0b8"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#10281c"/>
+      <stop offset="1" stop-color="#030b06"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#101717"/>
+  <rect x="38" y="105" width="436" height="302" rx="34" fill="url(#case)" stroke="#fff" stroke-width="9"/>
+  <rect x="68" y="137" width="118" height="94" rx="8" fill="#28302f"/>
+  <text x="127" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#e9f3e9">ADV</text>
+  <rect x="204" y="136" width="128" height="96" rx="8" fill="#8b948c" stroke="#606a62" stroke-width="5"/>
+  <rect x="214" y="146" width="108" height="76" rx="2" fill="url(#screen)"/>
+  <path d="M222 164h92M222 177h74M222 190h86M222 203h51" stroke="#a7ed91" stroke-width="5" stroke-linecap="round"/>
+  <rect x="350" y="139" width="94" height="93" rx="7" fill="#718b79" stroke="#50695a" stroke-width="5"/>
+  <rect x="372" y="159" width="48" height="44" rx="4" fill="#1e2925"/>
+  <g fill="#242c29">
+    <rect x="68" y="254" width="25" height="27" rx="6"/><rect x="101" y="254" width="25" height="27" rx="6"/><rect x="134" y="254" width="25" height="27" rx="6"/><rect x="167" y="254" width="25" height="27" rx="6"/><rect x="200" y="254" width="25" height="27" rx="6"/><rect x="233" y="254" width="25" height="27" rx="6"/><rect x="266" y="254" width="25" height="27" rx="6"/><rect x="299" y="254" width="25" height="27" rx="6"/><rect x="332" y="254" width="25" height="27" rx="6"/><rect x="365" y="254" width="25" height="27" rx="6"/><rect x="398" y="254" width="25" height="27" rx="6"/>
+    <rect x="68" y="293" width="25" height="27" rx="6"/><rect x="101" y="293" width="25" height="27" rx="6"/><rect x="134" y="293" width="25" height="27" rx="6"/><rect x="167" y="293" width="25" height="27" rx="6"/><rect x="200" y="293" width="25" height="27" rx="6"/><rect x="233" y="293" width="25" height="27" rx="6"/><rect x="266" y="293" width="25" height="27" rx="6"/><rect x="299" y="293" width="25" height="27" rx="6"/><rect x="332" y="293" width="25" height="27" rx="6"/><rect x="365" y="293" width="25" height="27" rx="6"/><rect x="398" y="293" width="25" height="27" rx="6"/>
+    <rect x="68" y="332" width="25" height="27" rx="6"/><rect x="101" y="332" width="25" height="27" rx="6"/><rect x="134" y="332" width="25" height="27" rx="6"/><rect x="167" y="332" width="25" height="27" rx="6"/><rect x="200" y="332" width="25" height="27" rx="6"/><rect x="233" y="332" width="25" height="27" rx="6"/><rect x="266" y="332" width="25" height="27" rx="6"/><rect x="299" y="332" width="25" height="27" rx="6"/><rect x="332" y="332" width="25" height="27" rx="6"/><rect x="365" y="332" width="25" height="27" rx="6"/><rect x="398" y="332" width="25" height="27" rx="6"/>
+  </g>
+  <circle cx="57" cy="124" r="5" fill="#e98c50"/><circle cx="455" cy="124" r="5" fill="#e98c50"/>
+  <text x="256" y="449" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="800" letter-spacing="3" fill="#9be36e">CARDPUTER ADV</text>
+</svg>
