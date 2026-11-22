@@ -42,6 +42,7 @@ const state = {
   heldPointers: new Map(),
   events: 0,
   selectedFirmware: null,
+  selectedElf: null,
   runtimeWorker: null,
   runtimeLoaded: false,
   runtimeRunning: false
@@ -561,12 +562,30 @@ function handleRuntimeMessage(event) {
     appendFirmwareConsole("\n[RESET CPU]\n");
     addEvent("RUNTIME", "Reset du CPU ESP32-S3");
     drawScreen();
+  } else if (message.type === "metrics") {
+    const cycles = Number(message.cycles || 0);
+    const cyclesPerUs = Number(message.cyclesPerUs || 0);
+    const elapsedUs = cyclesPerUs > 0 ? cycles / cyclesPerUs : 0;
+    $("#firmware-metrics").textContent = `Cycles CPU : ${cycles.toLocaleString("fr-FR")} · Temps émulé : ${elapsedUs.toFixed(0)} µs${message.faulted ? " · faute CPU" : ""}`;
+  } else if (message.type === "elf-loaded") {
+    $("#firmware-elf-load").disabled = false;
+    $("#firmware-elf-info").textContent += "\nSymboles ELF chargés dans le moteur (utilisés pour les rapports de faute).";
+    setFirmwareRuntimeStatus("Symboles ELF Xtensa chargés. Les rapports de faute peuvent être symboliqués.", "success");
+    addEvent("DEBUG", `Symboles ELF chargés : ${message.filename}`);
+  } else if (message.type === "stepped") {
+    state.runtimeRunning = false;
+    $("#firmware-start").disabled = false;
+    $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = false;
+    setFirmwareRuntimeStatus("Pas d’environ 1 000 instructions exécuté ; CPU en pause.", "info");
+    drawScreen();
   } else if (message.type === "uart") {
     appendFirmwareConsole(message.text || "");
   } else if (message.type === "fault") {
     state.runtimeRunning = false;
     $("#firmware-start").disabled = false;
     $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = false;
     setFirmwareRuntimeStatus(`Le moteur a arrêté sur une faute CPU : ${message.message}`, "error");
     appendFirmwareConsole(`\n[FAULT] ${message.message}\n${message.report || ""}\n`);
     addEvent("FAULT CPU", message.message);
@@ -575,6 +594,8 @@ function handleRuntimeMessage(event) {
     state.runtimeRunning = false;
     $("#firmware-start").disabled = !state.runtimeLoaded;
     $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = !state.runtimeLoaded;
+    $("#firmware-load").disabled = !state.selectedFirmware;
     setFirmwareRuntimeStatus(message.message || "Erreur inconnue du moteur.", "error");
     appendFirmwareConsole(`\n[ERREUR] ${message.message || "Erreur"}\n${message.report || ""}\n`);
     addEvent("ERREUR RUNTIME", message.message || "Erreur");
@@ -592,6 +613,23 @@ function ensureFirmwareWorker() {
   });
   state.runtimeWorker = runtimeWorker;
   return runtimeWorker;
+}
+
+async function inspectSelectedElf(file) {
+  const { inspectElfImage, sha256Hex, formatBytes } = await import("./emulator/firmware-image.mjs");
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const metadata = inspectElfImage(bytes, { filename: file.name });
+  const checksum = await sha256Hex(bytes);
+  state.selectedElf = { file, bytes, metadata, checksum };
+  $("#firmware-elf-info").textContent = `${file.name} · ${formatBytes(file.size)} · SHA-256 ${checksum} · ELF ${metadata.machine}`;
+  $("#firmware-elf-load").disabled = !state.runtimeLoaded;
+}
+
+async function loadSelectedElf() {
+  if (!state.selectedElf || !state.runtimeLoaded) return;
+  const transfer = state.selectedElf.bytes.slice().buffer;
+  ensureFirmwareWorker().postMessage({ type: "LOAD_ELF", filename: state.selectedElf.file.name, buffer: transfer }, [transfer]);
+  $("#firmware-elf-load").disabled = true;
 }
 
 async function inspectSelectedFirmware(file) {
@@ -643,6 +681,10 @@ function stopSelectedFirmware() {
   if (state.runtimeWorker) state.runtimeWorker.postMessage({ type: "STOP" });
 }
 
+function stepSelectedFirmware() {
+  if (state.runtimeLoaded) ensureFirmwareWorker().postMessage({ type: "STEP" });
+}
+
 async function init() {
   try {
     const response = await fetch("./keyboard-layout.json", { cache: "no-cache" });
@@ -684,6 +726,19 @@ async function init() {
     }
   });
   $("#firmware-load").addEventListener("click", loadSelectedFirmware);
+  $("#firmware-elf-file").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      await inspectSelectedElf(file);
+    } catch (error) {
+      state.selectedElf = null;
+      $("#firmware-elf-load").disabled = true;
+      $("#firmware-elf-info").textContent = error.message;
+    }
+  });
+  $("#firmware-elf-load").addEventListener("click", loadSelectedElf);
+  $("#firmware-step").addEventListener("click", stepSelectedFirmware);
   $("#firmware-start").addEventListener("click", startSelectedFirmware);
   $("#firmware-reset").addEventListener("click", resetSelectedFirmware);
   $("#firmware-stop").addEventListener("click", stopSelectedFirmware);
