@@ -56,3 +56,22 @@
 - [ ] Validation PWA installée sur le Z Flip6 ; l'interface possède pour l'instant les fichiers du manifeste et du service worker.
 
 Ces éléments appartiennent aux étapes suivantes et ne doivent pas être annoncés comme déjà disponibles.
+
+
+## Étape 4/5 — Runtime ESP32-S3 et import firmware
+
+**Statut : intégration logicielle préparée ; exécution réelle à valider après installation du bundle ESP-EMU et test d'un BIN ESP32-S3.**
+
+- [x] Choix du moteur officiel Espressif esp-emu 1.2.0 (WebAssembly, ESP32-S3) et licence Apache-2.0 vérifiés.
+- [x] Installateur reproductible épinglé sur une version et un SHA-256 ; extraction limitée aux fichiers attendus.
+- [x] Worker d'intégration : cible ESP32-S3, ROM intégrée, chargement BIN, commandes démarrer/arrêter/reset, erreurs et fautes CPU.
+- [x] Import BIN avec limite de 8 Mio, détection ELF mal placé, inspection prudente des en-têtes ESP et calcul SHA-256 local.
+- [x] Panneau d'import, commandes CPU et console UART dans l'interface.
+- [x] Contrats d'import, d'exécution et limites documentés.
+- [ ] Installer le bundle ESP-EMU et vérifier le chargement de son module WASM dans le navigateur.
+- [ ] Démarrer un vrai firmware fusionné compilé pour ESP32-S3 et vérifier sa sortie UART.
+- [ ] Raccorder les modèles Cardputer ADV (écran, clavier TCA8418, IMU, codec, SD) via des composants de co-simulation compatibles.
+- [ ] Tester stabilité, mémoire et performances sur le Galaxy Z Flip6.
+- [ ] Ajouter l'import ELF pour symboles, la réception UART et le débogage interactif.
+
+**Résultat honnête :** le dépôt contient maintenant le chemin d'intégration et le contrôle des BIN, mais le moteur CPU ne peut pas être considéré comme validé tant qu'un firmware réel n'a pas été exécuté avec le bundle installé.
