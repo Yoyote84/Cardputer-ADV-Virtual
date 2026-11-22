@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "device": {
+    "manufacturer": "M5Stack",
+    "name": "Cardputer-Adv",
+    "sku": "K132-Adv",
+    "profile_id": "m5stack-cardputer-adv-k132-adv",
+    "profile_scope": "base_device_only",
+    "source_url": "https://docs.m5stack.com/en/core/Cardputer-Adv",
+    "verified_on": "2026-11-22"
+  },
+  "processor": {
+    "module": "Stamp-S3A",
+    "soc": "ESP32-S3FN8",
+    "architecture": "Xtensa LX7",
+    "cores": 2,
+    "clock_mhz": 240,
+    "flash_bytes": 8388608
+  },
+  "display": {
+    "controller": "ST7789V2",
+    "diagonal_inches": 1.14,
+    "width_pixels": 240,
+    "height_pixels": 135,
+    "interface": "SPI",
+    "pins": {
+      "backlight": 38,
+      "reset": 33,
+      "data_command": 34,
+      "data": 35,
+      "clock": 36,
+      "chip_select": 37
+    }
+  },
+  "keyboard": {
+    "key_count": 56,
+    "rows": 4,
+    "columns": 14,
+    "controller": "TCA8418RTWR",
+    "interface": "I2C",
+    "pins": {
+      "sda": 8,
+      "scl": 9,
+      "interrupt": 11
+    },
+    "i2c_address": null,
+    "keymap_status": "not_yet_verified"
+  },
+  "imu": {
+    "controller": "BMI270",
+    "axes": 6,
+    "interface": "I2C",
+    "pins": {
+      "sda": 8,
+      "scl": 9
+    },
+    "i2c_address": null
+  },
+  "audio": {
+    "codec": "ES8311",
+    "amplifier": "NS4150B",
+    "speaker": {
+      "impedance_ohms": 8,
+      "power_watts": 1
+    },
+    "microphone": "MEMS",
+    "pins": {
+      "i2c_sda": 8,
+      "i2c_scl": 9,
+      "sclk": 41,
+      "asdout": 46,
+      "lrck": 43,
+      "dsdin": 42
+    }
+  },
+  "infrared": {
+    "transmitter_pin": 44
+  },
+  "battery": {
+    "capacity_mah": 1500,
+    "measurement_adc_pin": 10,
+    "capacity_source_note": "M5Stack product page version change dated 2026-07-13; older page revisions listed 1750 mAh"
+  },
+  "storage": {
+    "external": "microSD",
+    "interface": "SPI",
+    "pins": {
+      "chip_select": 12,
+      "mosi": 14,
+      "clock": 40,
+      "miso": 39
+    }
+  },
+  "ports": {
+    "grove_hy2_4p": {
+      "ground": null,
+      "power_5v": null,
+      "yellow_gpio": 2,
+      "white_gpio": 1
+    },
+    "ext_2_54_14p": {
+      "pin_functions": [
+        {"contact": 1, "gpio": 3, "function": "RESET"},
+        {"contact": 2, "gpio": null, "function": "5V_IN"},
+        {"contact": 3, "gpio": 4, "function": "INT"},
+        {"contact": 4, "gpio": null, "function": "GND"},
+        {"contact": 5, "gpio": 6, "function": "BUSY"},
+        {"contact": 6, "gpio": null, "function": "5V_OUT"},
+        {"contact": 7, "gpio": 40, "function": "SCK"},
+        {"contact": 8, "gpio": 8, "function": "I2C_SDA"},
+        {"contact": 9, "gpio": 14, "function": "MOSI"},
+        {"contact": 10, "gpio": 9, "function": "I2C_SCL"},
+        {"contact": 11, "gpio": 39, "function": "MISO"},
+        {"contact": 12, "gpio": 13, "function": "UART_TX"},
+        {"contact": 13, "gpio": 5, "function": "CS"},
+        {"contact": 14, "gpio": 15, "function": "UART_RX"}
+      ]
+    }
+  },
+  "extensions": [],
+  "limitations": [
+    "Ce profil décrit uniquement le Cardputer ADV K132-Adv de base.",
+    "Les adresses I2C et le keymap doivent être confirmés avant l'implémentation des pilotes virtuels.",
+    "Le module LoRa/GNSS externe n'est pas intégré au profil de base.",
+    "La capacité de batterie de 1500 mAh suit la fiche M5Stack actualisée le 13 juillet 2026."
+  ]
+}
