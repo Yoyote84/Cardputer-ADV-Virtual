@@ -378,6 +378,7 @@ function renderPeripheralPanel() {
     { name: "ST7789V2 · écran", value: `${result.st7789v2.width} × ${result.st7789v2.height} · RGB565`, state: result.st7789v2.displayOn ? "Modèle actif" : "Veille" },
     { name: "BMI270 · IMU", value: `CHIP_ID 0x${result.bmi270.chipId.toString(16)} · config Bosch absente`, state: result.bmi270.present ? "Modèle partiel" : "Erreur" },
     { name: "ES8311 · audio", value: `ID ${result.es8311.chipId.map((byte) => byte.toString(16).padStart(2,"0")).join(" ")} · I²S par blocs`, state: result.es8311.present ? "Modèle partiel" : "Erreur" },
+    { name: "NS4150B · haut-parleur", value: `gain ${result.audioAmplifier.gain}× · ${result.audioAmplifier.bufferedOutputSamples} échantillons`, state: "Modèle numérique" },
     { name: "microSD · SPI", value: `${(result.microSD.capacityBytes / 1_000_000_000).toFixed(0)} Go annoncés · ${result.microSD.allocatedBlocks} blocs alloués`, state: "Modèle bloc SPI" },
     { name: "Batterie / IR / GPIO", value: `ADC GPIO10 · IR GPIO44 · ${result.extensionPorts.ext.length} contacts EXT`, state: "Modèle de signaux" }
   ];
@@ -416,6 +417,9 @@ function runHardwareSelfTest() {
     checks.push({ name: "BMI270 CHIP_ID", ok: i2c.readByte(0x69, 0x00) === 0x24 });
     const codecId = i2c.read(0x18, 0xfd, 2);
     checks.push({ name: "ES8311 ID", ok: codecId[0] === 0x83 && codecId[1] === 0x11 });
+    const ampBefore = rack.diagnostics().audioAmplifier.inputSamples;
+    i2s.write("es8311", [1200, -1200], { sampleRate: 48000, bits: 16, channels: 1 });
+    checks.push({ name: "NS4150B sample path", ok: rack.diagnostics().audioAmplifier.inputSamples === ampBefore + 2 });
     checks.push({ name: "ST7789 framebuffer", ok: display.width === 240 && display.height === 135 && display.framebuffer.length === 32400 });
     const sample = Uint8Array.from({ length: 512 }, (_, index) => index & 0xff);
     checks.push({ name: "microSD block R/W", ok: sdCard.writeBlock(0, sample) && sdCard.readBlock(0)[255] === 255 });
