@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yoyote84/Cardputer-ADV-Virtual/blob/main/cardputer/profile.schema.json",
+  "title": "M5Stack Cardputer ADV hardware profile",
+  "type": "object",
+  "required": ["schema_version", "device", "processor", "display", "keyboard", "imu", "audio", "infrared", "battery", "storage", "ports", "extensions", "limitations"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "device": {
+      "type": "object",
+      "required": ["manufacturer", "name", "sku", "profile_id", "profile_scope", "source_url", "verified_on"],
+      "properties": {
+        "manufacturer": {"const": "M5Stack"},
+        "name": {"const": "Cardputer-Adv"},
+        "sku": {"const": "K132-Adv"},
+        "profile_id": {"type": "string", "minLength": 1},
+        "profile_scope": {"const": "base_device_only"},
+        "source_url": {"type": "string", "format": "uri"},
+        "verified_on": {"type": "string", "format": "date"}
+      },
+      "additionalProperties": false
+    },
+    "processor": {
+      "type": "object",
+      "required": ["module", "soc", "architecture", "cores", "clock_mhz", "flash_bytes"],
+      "properties": {
+        "module": {"const": "Stamp-S3A"},
+        "soc": {"const": "ESP32-S3FN8"},
+        "architecture": {"const": "Xtensa LX7"},
+        "cores": {"const": 2},
+        "clock_mhz": {"const": 240},
+        "flash_bytes": {"const": 8388608}
+      },
+      "additionalProperties": false
+    },
+    "display": {
+      "type": "object",
+      "required": ["controller", "width_pixels", "height_pixels", "interface", "pins"],
+      "properties": {
+        "controller": {"const": "ST7789V2"},
+        "width_pixels": {"const": 240},
+        "height_pixels": {"const": 135},
+        "interface": {"const": "SPI"},
+        "pins": {"type": "object", "required": ["backlight", "reset", "data_command", "data", "clock", "chip_select"], "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 48}}
+      },
+      "additionalProperties": true
+    },
+    "keyboard": {
+      "type": "object",
+      "required": ["key_count", "rows", "columns", "controller", "interface", "pins"],
+      "properties": {
+        "key_count": {"const": 56},
+        "rows": {"const": 4},
+        "columns": {"const": 14},
+        "controller": {"const": "TCA8418RTWR"},
+        "interface": {"const": "I2C"},
+        "pins": {"type": "object", "required": ["sda", "scl", "interrupt"], "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 48}},
+        "i2c_address": {"type": ["integer", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "imu": {"type": "object", "required": ["controller", "axes", "interface", "pins"], "properties": {"controller": {"const": "BMI270"}, "axes": {"const": 6}, "interface": {"const": "I2C"}, "pins": {"type": "object"}}},
+    "audio": {"type": "object", "required": ["codec", "amplifier", "speaker", "microphone", "pins"], "properties": {"codec": {"const": "ES8311"}, "amplifier": {"const": "NS4150B"}, "speaker": {"type": "object"}, "microphone": {"const": "MEMS"}, "pins": {"type": "object"}}},
+    "infrared": {"type": "object", "required": ["transmitter_pin"], "properties": {"transmitter_pin": {"type": "integer", "minimum": 0, "maximum": 48}}},
+    "battery": {"type": "object", "required": ["capacity_mah", "measurement_adc_pin"], "properties": {"capacity_mah": {"const": 1500}, "measurement_adc_pin": {"type": "integer", "minimum": 0, "maximum": 48}}},
+    "storage": {"type": "object", "required": ["external", "interface", "pins"], "properties": {"external": {"const": "microSD"}, "interface": {"const": "SPI"}, "pins": {"type": "object"}}},
+    "ports": {"type": "object"},
+    "extensions": {"type": "array"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
