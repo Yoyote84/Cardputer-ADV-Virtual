@@ -30,3 +30,10 @@ Les modèles matériels ci-dessous sont exécutables comme modules JavaScript au
 - **Firmware compatible** : uniquement après un test reproductible avec le vrai runtime ESP32-S3 de l'étape 4.
 
 Un modèle d'écran ou de clavier ne prouve pas, à lui seul, qu'un fichier BIN est exécuté.
+
+
+## Runtime Espressif (étape 4)
+
+Le moteur choisi peut exécuter le firmware ESP32-S3 dans WebAssembly. Le worker et l'importeur sont intégrés au projet, mais le bundle binaire doit être installé avec `tools/install_esp_emu.py`. Tant que ce bundle et un firmware de test n'ont pas été lancés, la prise en charge CPU reste **intégrée mais non validée**.
+
+Les périphériques que l'émulateur Espressif possède déjà ne sont pas équivalents aux périphériques Cardputer ADV. Les modèles TCA8418, ST7789V2, BMI270, ES8311, NS4150B et microSD demandent des composants WebAssembly spécifiques et un câblage de co-simulation ; ils ne sont pas automatiquement raccordés à l'ESP32-S3.
