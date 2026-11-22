@@ -72,6 +72,21 @@ export function inspectFirmwareImage(input, { filename = "firmware.bin" } = {}) 
   };
 }
 
+export function inspectElfImage(input, { filename = "symbols.elf" } = {}) {
+  const bytes = asBytes(input);
+  if (bytes.length < 52) throw new Error("Fichier ELF trop court.");
+  if (bytes.length > 32 * 1024 * 1024) throw new Error("Le fichier ELF dépasse la limite de 32 Mio.");
+  if (bytes[0] !== 0x7f || bytes[1] !== 0x45 || bytes[2] !== 0x4c || bytes[3] !== 0x46) {
+    throw new Error("Le fichier sélectionné n'est pas un ELF.");
+  }
+  if (bytes[4] !== 1 || bytes[5] !== 1) {
+    throw new Error("L'ELF doit être un fichier 32 bits little-endian pour Xtensa ESP32-S3.");
+  }
+  const machine = bytes[18] | (bytes[19] << 8);
+  if (machine !== 94) throw new Error(`Architecture ELF incompatible : e_machine=${machine}, Xtensa attendu (94).`);
+  return { filename, sizeBytes: bytes.length, format: "elf-xtensa", machine: "Xtensa" };
+}
+
 export async function sha256Hex(input, cryptoProvider = globalThis.crypto) {
   const bytes = asBytes(input);
   if (!cryptoProvider?.subtle?.digest) throw new Error("SHA-256 WebCrypto n'est pas disponible dans ce contexte.");
