@@ -378,7 +378,7 @@ function renderPeripheralPanel() {
     { name: "ST7789V2 · écran", value: `${result.st7789v2.width} × ${result.st7789v2.height} · RGB565`, state: result.st7789v2.displayOn ? "Modèle actif" : "Veille" },
     { name: "BMI270 · IMU", value: `CHIP_ID 0x${result.bmi270.chipId.toString(16)} · config Bosch absente`, state: result.bmi270.present ? "Modèle partiel" : "Erreur" },
     { name: "ES8311 · audio", value: `ID ${result.es8311.chipId.map((byte) => byte.toString(16).padStart(2,"0")).join(" ")} · I²S par blocs`, state: result.es8311.present ? "Modèle partiel" : "Erreur" },
-    { name: "microSD · SPI", value: `${Math.round(result.microSD.capacityBytes / 1024)} Ko · blocs de 512 octets`, state: "Modèle bloc SPI" },
+    { name: "microSD · SPI", value: `${(result.microSD.capacityBytes / 1_000_000_000).toFixed(0)} Go annoncés · ${result.microSD.allocatedBlocks} blocs alloués`, state: "Modèle bloc SPI" },
     { name: "Batterie / IR / GPIO", value: `ADC GPIO10 · IR GPIO44 · ${result.extensionPorts.ext.length} contacts EXT`, state: "Modèle de signaux" }
   ];
   const root = $("#peripheral-list");
