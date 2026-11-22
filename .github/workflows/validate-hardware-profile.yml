@@ -24,6 +24,7 @@ jobs:
           node --check app/app.js
           node --check app/app.mjs
           for file in app/emulator/*.mjs; do node --check "$file"; done
+          python -m py_compile tools/install_esp_emu.py
       - name: Test interface and peripheral models
         run: node --test tests/*.test.mjs
       - name: Validate hardware profile
