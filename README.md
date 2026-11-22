@@ -2,7 +2,7 @@
 
 Simulateur dédié au **M5Stack Cardputer ADV (K132-Adv)**, avec pour cible d'utilisation un Samsung Galaxy Z Flip6 et un fonctionnement hors ligne.
 
-> **État du projet : étape 3/5 — modèles matériels logiciels livrés ; vérification sur le Galaxy Z Flip6 à effectuer.**
+> **État du projet : étape 3/5 — modèles matériels logiciels livrés ; 23 tests automatisés réussis. Vérification sur le Galaxy Z Flip6 à effectuer.**
 >
 > Le dépôt contient l'interface PWA, le clavier réel mappé depuis un relevé matériel public et les modèles logiciels des bus et périphériques Cardputer ADV. Le runtime ESP32-S3 n'est pas encore intégré : aucune image BIN Cardputer n'est exécutée à cette étape.
 
@@ -28,7 +28,7 @@ Voir [les instructions de prévisualisation](README-PREVIEW.md) et [le contrat d
 
 ## Modèles matériels disponibles — étape 3
 
-Les périphériques logiciels sont dans [app/emulator/](app/emulator/) : bus I²C/SPI/I²S, FIFO TCA8418, framebuffer ST7789V2, BMI270, ES8311, NS4150B, microSD SPI sparse de 128 Go, GPIO, ADC batterie et capture IR. Le clavier interactif envoie désormais les événements au modèle TCA8418 avant de les exposer à l'interface.
+Les périphériques logiciels sont dans [app/emulator/](app/emulator/) : bus I²C/SPI/I²S, FIFO TCA8418, framebuffer ST7789V2, BMI270, ES8311, NS4150B, microSD SPI sparse de 128 Go, GPIO, ADC batterie et capture IR. Le clavier interactif suit les 56 légendes et codes FIFO relevés sur un Cardputer ADV physique dans [Cardputer-ADV-Keyboard](https://github.com/kamrrillo/Cardputer-ADV-Keyboard) ; les événements passent par le modèle TCA8418 avant d'être exposés à l'interface.
 
 Lancer tous les tests :
 
