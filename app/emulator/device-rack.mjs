@@ -17,7 +17,7 @@ export function createCardputerDeviceRack() {
   const display = new ST7789V2Device({ width: 240, height: 135 });
   const imu = new BMI270Device();
   const codec = new ES8311Device();
-  const sdCard = new SDSpiCard({ capacityBlocks: 4096 });
+  const sdCard = new SDSpiCard({ capacityBlocks: 250_000_000 });
   const battery = new BatteryADCModel(gpio, { capacityMah: 1500, adcPin: 10 });
   const infrared = new InfraredTransmitter({ gpio, pin: 44 });
 
