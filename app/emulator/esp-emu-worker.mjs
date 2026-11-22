@@ -2,10 +2,15 @@ let engine = null;
 let pump = null;
 let loadedName = "";
 let running = false;
+let metricsTimer = null;
 
 const send = (type, details = {}) => self.postMessage({ type, ...details });
 
 function stopPump() {
+  if (metricsTimer !== null) {
+    clearInterval(metricsTimer);
+    metricsTimer = null;
+  }
   if (pump) {
     try { pump.stop(); } catch {}
     pump = null;
@@ -66,13 +71,16 @@ function startFirmware() {
   if (!engine || !pump) throw new Error("Aucun firmware chargé.");
   if (running) return;
   pump.start(
-    (text) => send("uart", { text: String(text) }),
-    (error) => reportError(error),
-    { onBatch: sendMetrics }
+    (text) => {
+      send("uart", { text: String(text) });
+      sendMetrics();
+    },
+    (error) => reportError(error)
   );
   running = true;
   send("running", { filename: loadedName });
   sendMetrics();
+  metricsTimer = setInterval(sendMetrics, 500);
 }
 
 async function loadElfSymbols(buffer, filename) {
