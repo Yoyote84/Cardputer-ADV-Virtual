@@ -50,7 +50,7 @@ Critères de sortie :
 
 ## 3/5 — Modèles matériels Cardputer ADV
 
-**Statut : socle de modèles logiciels livré ; validation automatisée en cours.**
+**Statut : socle de modèles logiciels livré ; 23 tests automatisés réussis. Validation physique sur le Z Flip6 à confirmer.**
 
 Objectif : fournir des périphériques virtuels accessibles via leurs bus, sans prétendre encore exécuter un firmware natif.
 
@@ -75,7 +75,7 @@ Critères de sortie :
 - [x] les fonctions non implémentées sont signalées explicitement ;
 - [x] les modèles sont rattachés aux adresses I²C, broches SPI, GPIO et bus du profil ;
 - [x] les événements du clavier UI passent par les registres et le FIFO TCA8418 virtuels ;
-- [ ] test manuel de l'interface sur le Galaxy Z Flip6 à confirmer indépendamment.
+- [ ] test manuel de l'interface et des interactions sur le Galaxy Z Flip6 à confirmer indépendamment.
 
 Limites conservées pour l'étape 4 :
 - le CPU ESP32-S3 n'est pas encore émulé et aucun BIN n'est exécuté ;
