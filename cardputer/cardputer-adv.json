@@ -93,27 +93,83 @@
   },
   "ports": {
     "grove_hy2_4p": {
-      "ground": null,
-      "power_5v": null,
+      "ground": "GND",
+      "power_5v": "5V",
       "yellow_gpio": 2,
       "white_gpio": 1
     },
     "ext_2_54_14p": {
       "pin_functions": [
-        {"contact": 1, "gpio": 3, "function": "RESET"},
-        {"contact": 2, "gpio": null, "function": "5V_IN"},
-        {"contact": 3, "gpio": 4, "function": "INT"},
-        {"contact": 4, "gpio": null, "function": "GND"},
-        {"contact": 5, "gpio": 6, "function": "BUSY"},
-        {"contact": 6, "gpio": null, "function": "5V_OUT"},
-        {"contact": 7, "gpio": 40, "function": "SCK"},
-        {"contact": 8, "gpio": 8, "function": "I2C_SDA"},
-        {"contact": 9, "gpio": 14, "function": "MOSI"},
-        {"contact": 10, "gpio": 9, "function": "I2C_SCL"},
-        {"contact": 11, "gpio": 39, "function": "MISO"},
-        {"contact": 12, "gpio": 13, "function": "UART_TX"},
-        {"contact": 13, "gpio": 5, "function": "CS"},
-        {"contact": 14, "gpio": 15, "function": "UART_RX"}
+        {
+          "contact": 1,
+          "gpio": 3,
+          "function": "RESET"
+        },
+        {
+          "contact": 2,
+          "gpio": null,
+          "function": "5V_IN"
+        },
+        {
+          "contact": 3,
+          "gpio": 4,
+          "function": "INT"
+        },
+        {
+          "contact": 4,
+          "gpio": null,
+          "function": "GND"
+        },
+        {
+          "contact": 5,
+          "gpio": 6,
+          "function": "BUSY"
+        },
+        {
+          "contact": 6,
+          "gpio": null,
+          "function": "5V_OUT"
+        },
+        {
+          "contact": 7,
+          "gpio": 40,
+          "function": "SCK"
+        },
+        {
+          "contact": 8,
+          "gpio": 8,
+          "function": "I2C_SDA"
+        },
+        {
+          "contact": 9,
+          "gpio": 14,
+          "function": "MOSI"
+        },
+        {
+          "contact": 10,
+          "gpio": 9,
+          "function": "I2C_SCL"
+        },
+        {
+          "contact": 11,
+          "gpio": 39,
+          "function": "MISO"
+        },
+        {
+          "contact": 12,
+          "gpio": 13,
+          "function": "UART_TX"
+        },
+        {
+          "contact": 13,
+          "gpio": 5,
+          "function": "CS"
+        },
+        {
+          "contact": 14,
+          "gpio": 15,
+          "function": "UART_RX"
+        }
       ]
     }
   },
