@@ -21,7 +21,7 @@ test("bus I2C : scan, lecture, écriture et erreur d'adresse", () => {
   bus.writeByte(0x69, 0x7c, 0x02);
   assert.equal(bus.readByte(0x69, 0x7c), 0x02);
   assert.throws(() => bus.readByte(0x34, 0x00), /Aucun périphérique/);
-  assert.equal(bus.transactions.length, 2);
+  assert.equal(bus.transactions.length, 3);
 });
 
 test("TCA8418 : initialisation ADV, FIFO press/release et clear W1C", () => {
@@ -176,9 +176,11 @@ test("microSD SPI : init SDHC, write single block puis read single block", () =>
 
   assert.equal(command(0), 0x01); // idle
   assert.equal(command(8, 0x1aa), 0x01);
+  for (let index = 0; index < 4; index += 1) card.transfer(0xff); // CMD8 R7 tail
   assert.equal(command(55), 0x01);
   assert.equal(command(41, 0x40000000), 0x00);
   assert.equal(command(58), 0x00);
+  for (let index = 0; index < 4; index += 1) card.transfer(0xff); // CMD58 OCR tail
 
   assert.equal(command(9), 0x00); // Read CSD v2
   assert.equal(card.transfer(0xff), 0xfe);
