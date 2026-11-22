@@ -146,11 +146,13 @@ Le dépôt sélectionne Espressif esp-emu 1.2.0 en WebAssembly comme runtime, aj
 
 - [x] moteur retenu, version épinglée et installateur vérifiant l'archive par SHA-256 ;
 - [x] interface d'import BIN, contrôle taille/format, calcul SHA-256 et worker d'intégration ;
-- [x] commandes de cycle de vie du worker (start/stop/reset) et console UART ;
+- [x] commandes de cycle de vie du worker (start/stop/reset), console UART et suivi des cycles CPU ;
+- [x] import d'un ELF Xtensa optionnel pour les symboles et pas manuel par lot d'instructions ;
 - [ ] bundle WebAssembly installé et chargé réellement dans un navigateur ;
 - [ ] firmware ESP32-S3 de test démarré avec sortie UART vérifiée ;
 - [ ] accès écran, clavier et périphériques Cardputer reliés aux modèles correspondants ;
 - [ ] application testée hors ligne après mise en cache complète du runtime ;
-- [ ] tests de performances et mémoire sur Galaxy Z Flip6.
+- [ ] tests de performances et mémoire sur Galaxy Z Flip6 ;
+- [ ] réception de caractères UART et débogueur interactif registres/mémoire.
 
 Un BIN accepté par l'importeur ne constitue pas une garantie de compatibilité : seul le moteur puis un démarrage de référence peuvent le confirmer.
