@@ -9,8 +9,8 @@ export class BMI270Device {
 
   constructor() {
     this.registers = new Uint8Array(256);
-    this.reset();
     this.motion = { accel: [0, 0, 16384], gyro: [0, 0, 0] };
+    this.reset();
     this.initializationBytes = 0;
     this.configurationRequested = false;
   }
