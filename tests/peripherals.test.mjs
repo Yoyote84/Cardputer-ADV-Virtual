@@ -194,6 +194,8 @@ test("microSD SPI : init SDHC, write single block puis read single block", () =>
   const block = Uint8Array.from({ length: 512 }, (_, index) => (index * 7) & 0xff);
   transfer([...block, 0xff, 0xff]);
   assert.equal(card.transfer(0xff), 0x05);
+  assert.equal(card.transfer(0xff), 0x00); // card busy
+  assert.equal(card.transfer(0xff), 0xff); // ready for the next command
 
   assert.equal(command(17, 1), 0x00);
   assert.equal(card.transfer(0xff), 0xfe);
