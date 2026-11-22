@@ -32,9 +32,9 @@
     <main id="device" class="main-content">
       <section class="intro-row" aria-labelledby="page-title">
         <div>
-          <p class="eyebrow">ÉTAPE 03 / 05 · PÉRIPHÉRIQUES</p>
-          <h1 id="page-title">Le matériel virtuel prend vie.</h1>
-          <p class="intro-text">Les touches transitent par le contrôleur TCA8418 virtuel. L’écran est envoyé au contrôleur ST7789V2 virtuel en RGB565.</p>
+          <p class="eyebrow">ÉTAPE 04 / 05 · EXÉCUTION DU FIRMWARE</p>
+          <h1 id="page-title">Charge un vrai firmware ESP32-S3.</h1>
+          <p class="intro-text">Importe une image flash ESP32-S3, démarre le CPU Xtensa dans le moteur WebAssembly local et observe sa sortie série.</p>
         </div>
         <div class="stage-chip"><span>03</span><div><strong>MATÉRIEL</strong><small>Modèles locaux</small></div></div>
       </section>
@@ -101,14 +101,35 @@
         </article>
         <article class="status-card">
           <div class="status-card-heading"><span>PROCESSEUR</span><span class="tiny-tag tiny-tag--muted">ÉTAPE 4</span></div>
-          <strong>ESP32-S3 non émulé</strong>
-          <small>Aucun firmware BIN n’est exécuté à cette étape.</small>
+          <strong id="runtime-state">Moteur ESP32-S3 à installer</strong>
+          <small id="runtime-state-detail">Import BIN et exécution locale préparés à l’étape 4.</small>
         </article>
         <article class="status-card">
           <div class="status-card-heading"><span>CLAVIER</span><span class="tiny-tag" id="modifier-state">PRÊT</span></div>
           <strong id="last-key">En attente d’une touche</strong>
           <small id="modifier-summary">FN désactivé · Aa désactivé</small>
         </article>
+      </section>
+
+      <section class="firmware-panel" aria-labelledby="firmware-title">
+        <div class="event-panel-header">
+          <div><p class="eyebrow">ÉTAPE 04 / 05 · ESP32-S3 XTENSA</p><h2 id="firmware-title">Charger un firmware</h2></div>
+          <span class="tiny-tag tiny-tag--muted">LOCAL · BIN</span>
+        </div>
+        <p class="firmware-intro">Choisis un <strong>BIN fusionné</strong> compilé pour ESP32-S3. Le fichier est vérifié puis transmis au moteur local ; il n’est pas envoyé à un serveur.</p>
+        <label class="firmware-file-label" for="firmware-file">Fichier firmware (.bin)</label>
+        <input id="firmware-file" class="firmware-file-input" type="file" accept=".bin,application/octet-stream">
+        <p id="firmware-file-info" class="firmware-file-info" aria-live="polite">Aucun firmware sélectionné.</p>
+        <div class="firmware-controls">
+          <button id="firmware-load" class="control-button" type="button" disabled>Importer le BIN</button>
+          <button id="firmware-start" class="control-button control-button--power" type="button" disabled>Démarrer</button>
+          <button id="firmware-reset" class="control-button" type="button" disabled>Reset CPU</button>
+          <button id="firmware-stop" class="control-button control-button--quiet" type="button" disabled>Arrêter</button>
+        </div>
+        <p id="firmware-runtime-status" class="firmware-runtime-status" data-state="info" aria-live="polite">Installe d’abord le moteur ESP-EMU WebAssembly 1.2.0 avec l’instruction indiquée dans la documentation.</p>
+        <div class="firmware-console-heading"><strong>Console UART</strong><span id="firmware-engine-label">CPU non démarré</span></div>
+        <pre id="firmware-console" class="firmware-console" aria-live="polite">En attente d’un firmware…</pre>
+        <p class="firmware-footnote">La console affiche les sorties UART réellement émises par le firmware. Les périphériques spécifiques du Cardputer (ST7789V2, TCA8418, IMU et audio) sont encore à raccorder au CPU émulé ; leurs modèles de l’étape 3 restent disponibles séparément.</p>
       </section>
 
       <section class="event-panel" aria-labelledby="events-title">
@@ -130,12 +151,12 @@
         <div id="peripheral-list" class="peripheral-list" aria-live="polite">
           <p class="empty-event">Initialisation des modèles matériels…</p>
         </div>
-        <p id="hardware-test-result" class="hardware-test-result" aria-live="polite">Les contrôles vérifient les modèles logiciels, pas encore un firmware ESP32-S3.</p>
+        <p id="hardware-test-result" class="hardware-test-result" aria-live="polite">Les contrôles vérifient les modèles matériels indépendamment du CPU ESP32-S3.</p>
       </section>
 
       <aside class="scope-note" aria-label="Périmètre de cette étape">
         <span class="scope-icon" aria-hidden="true">i</span>
-        <p><strong>Modélisé :</strong> FIFO TCA8418, commandes ST7789V2, registres de base BMI270/ES8311, SD SPI en blocs, GPIO, ADC brut et capture IR. <strong>Pas encore émulé :</strong> CPU ESP32-S3, configuration avancée Bosch, audio analogique, FAT et exécution de BIN. Le moteur CPU arrive à l’étape 4.</p>
+        <p><strong>Modélisé :</strong> FIFO TCA8418, commandes ST7789V2, registres de base BMI270/ES8311, SD SPI en blocs, GPIO, ADC brut et capture IR. <strong>Encore partiel :</strong> liaison du runtime aux périphériques Cardputer, import ELF pour symboles et tests sur Z Flip6. Le BIN est exécuté par le moteur local si ses ressources sont installées.</p>
       </aside>
     </main>
 
