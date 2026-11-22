@@ -27,5 +27,7 @@ jobs:
           python -m py_compile tools/install_esp_emu.py
       - name: Test interface and peripheral models
         run: node --test tests/*.test.mjs
+      - name: Test runtime installer safety
+        run: python -m unittest discover -s tests -p "test_*.py"
       - name: Validate hardware profile
         run: python tools/validate_profile.py
