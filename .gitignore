@@ -1,0 +1,34 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# JavaScript / frontend
+node_modules/
+dist/
+.vite/
+coverage/
+
+# Android / Gradle
+.gradle/
+**/build/
+local.properties
+*.keystore
+*.jks
+
+# Emulator output and user firmware
+artifacts/
+runtime-cache/
+firmware-images/
+*.bin
+*.elf
+*.uf2
+*.flash
+*.snapshot
+
+# Local environment
+.env
+.env.*
+!.env.example
