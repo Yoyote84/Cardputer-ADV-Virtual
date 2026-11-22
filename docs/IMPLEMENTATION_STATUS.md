@@ -46,16 +46,17 @@
 - [ ] Comparaison tactile/visuelle sur le vrai Z Flip6.
 - [ ] Modèle SX1262/GNSS optionnel non inclus au socle.
 
-**Limite majeure :** aucun firmware BIN n'est encore exécuté. Le runtime ESP32-S3 et son raccordement aux bus restent l'étape 4.
+**Limite majeure :** aucun démarrage de firmware n'a encore été validé sur un vrai BIN. Les modèles périphériques restent séparés du moteur CPU.
 
 ## Pas encore implémenté
 
 - [ ] Modèles avancés/électriques non couverts : configuration complète BMI270, chemin analogique ES8311/NS4150B, CRC/modes SD complets et module SX1262/GNSS.
-- [ ] Runtime ESP32-S3 local Android.
-- [ ] Import et exécution de BIN.
-- [ ] Validation PWA installée sur le Z Flip6 ; l'interface possède pour l'instant les fichiers du manifeste et du service worker.
+- [ ] Exécution d'un vrai BIN ESP32-S3 vérifiée avec le bundle runtime installé.
+- [ ] Raccordement des modèles de périphériques Cardputer au moteur par co-simulation.
+- [ ] Réception UART, débogueur interactif Xtensa et mesures de performances Android.
+- [ ] Validation PWA installée sur le Z Flip6 et fonctionnement hors ligne après installation du moteur.
 
-Ces éléments appartiennent aux étapes suivantes et ne doivent pas être annoncés comme déjà disponibles.
+Ces éléments restent à valider ou à implémenter ; l'interface ne doit pas être présentée comme une émulation Cardputer complète.
 
 
 ## Étape 4/5 — Runtime ESP32-S3 et import firmware
@@ -72,6 +73,8 @@ Ces éléments appartiennent aux étapes suivantes et ne doivent pas être annon
 - [ ] Démarrer un vrai firmware fusionné compilé pour ESP32-S3 et vérifier sa sortie UART.
 - [ ] Raccorder les modèles Cardputer ADV (écran, clavier TCA8418, IMU, codec, SD) via des composants de co-simulation compatibles.
 - [ ] Tester stabilité, mémoire et performances sur le Galaxy Z Flip6.
-- [ ] Ajouter l'import ELF pour symboles, la réception UART et le débogage interactif.
+- [x] Import ELF Xtensa facultatif pour symboliser les rapports de faute.
+- [x] Pas manuel par lots d'environ 1 000 instructions et affichage des cycles CPU.
+- [ ] Réception de caractères UART, débogage interactif registres/mémoire et breakpoints pilotés depuis l'interface.
 
 **Résultat honnête :** le dépôt contient maintenant le chemin d'intégration et le contrôle des BIN, mais le moteur CPU ne peut pas être considéré comme validé tant qu'un firmware réel n'a pas été exécuté avec le bundle installé.
