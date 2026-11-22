@@ -247,3 +247,45 @@ code { padding: 1px 4px; border-radius: 4px; background: #273731; color: #c3e7b2
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+
+/* Étape 4 — import firmware et console du runtime ESP32-S3 */
+.firmware-panel {
+  margin-top: 1.25rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid rgba(129, 174, 143, .24);
+  border-radius: 1.1rem;
+  background: linear-gradient(145deg, rgba(21, 39, 32, .94), rgba(12, 23, 21, .98));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .16);
+}
+.firmware-intro, .firmware-footnote, .firmware-file-info, .firmware-runtime-status {
+  color: var(--muted, #a5b8aa);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+.firmware-file-label { display: block; margin: 1rem 0 .45rem; font-weight: 700; color: #e4f3e5; }
+.firmware-file-input {
+  display: block; width: 100%; min-width: 0; padding: .8rem;
+  border: 1px dashed rgba(156, 203, 164, .42); border-radius: .75rem;
+  background: rgba(2, 10, 8, .48); color: #dce9df;
+}
+.firmware-file-info { white-space: pre-line; overflow-wrap: anywhere; min-height: 1.5rem; }
+.firmware-controls { display: flex; flex-wrap: wrap; gap: .55rem; margin: .8rem 0; }
+.firmware-controls .control-button { min-height: 2.65rem; }
+.firmware-runtime-status { margin: .7rem 0; padding: .7rem .85rem; border-left: 3px solid #c69d62; background: rgba(198, 157, 98, .08); }
+.firmware-runtime-status[data-state="success"] { border-color: #77be8c; }
+.firmware-runtime-status[data-state="error"] { border-color: #d87970; color: #f0c0bb; }
+.firmware-console-heading { display: flex; justify-content: space-between; gap: .7rem; margin: 1rem 0 .4rem; color: #d9eadc; font-size: .84rem; }
+.firmware-console-heading span { color: #8da996; font-size: .75rem; }
+.firmware-console {
+  min-height: 9rem; max-height: 20rem; overflow: auto; margin: 0;
+  padding: .9rem; border: 1px solid rgba(126, 166, 135, .22);
+  border-radius: .7rem; background: #050b09; color: #a9e7a9;
+  font: .78rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.firmware-footnote { margin: .8rem 0 0; font-size: .78rem; }
+@media (max-width: 520px) {
+  .firmware-controls .control-button { flex: 1 1 calc(50% - .55rem); }
+  .firmware-console { font-size: .7rem; }
+}
