@@ -7,7 +7,7 @@ const TCA_EVENT_COUNT = 0x03;
 const TCA_EVENT_A = 0x04;
 const TCA_INT_STAT = 0x02;
 const TCA_INT_MASK = 0x1f;
-const PAGES = ["ACCUEIL", "CLAVIER", "MATÉRIEL", "À PROPOS"];
+const PAGES = ["ACCUEIL", "CLAVIER", "MATÉRIEL", "FIRMWARE", "À PROPOS"];
 const $ = (selector) => document.querySelector(selector);
 
 const canvas = $("#device-screen");
@@ -40,7 +40,11 @@ const state = {
   typed: "",
   lastKey: "—",
   heldPointers: new Map(),
-  events: 0
+  events: 0,
+  selectedFirmware: null,
+  runtimeWorker: null,
+  runtimeLoaded: false,
+  runtimeRunning: false
 };
 
 function addEvent(kind, value) {
@@ -272,7 +276,7 @@ function drawScreen() {
 
   if (state.page === "ACCUEIL") {
     drawText(context, "INTERFACE VIRTUELLE", 9, 29, "#f0f5db", "bold 8px monospace");
-    const items = ["BUREAU", "CLAVIER", "MATÉRIEL", "À PROPOS"];
+    const items = ["BUREAU", "CLAVIER", "MATÉRIEL", "FIRMWARE", "À PROPOS"];
     items.forEach((item, index) => {
       const y = 45 + index * 15;
       if (index === state.selectedPage) {
@@ -303,18 +307,24 @@ function drawScreen() {
     drawText(context, "BMI270 / ES8311", 9, 83, "#d6dcb9", "7px monospace");
     drawText(context, "SD SPI CS12 · IR GPIO44", 9, 100, "#d6dcb9", "7px monospace");
     drawText(context, "MODELES ETAPE 3 / 5", 9, 119, "#eabf78", "7px monospace");
+  } else if (state.page === "FIRMWARE") {
+    drawText(context, "RUNTIME ESP32-S3", 9, 30, "#f0f5db", "bold 8px monospace");
+    drawText(context, state.runtimeLoaded ? "BIN CHARGE" : "AUCUN BIN CHARGE", 9, 49, "#a9e9ad", "8px monospace");
+    drawText(context, state.runtimeRunning ? "CPU EN EXECUTION" : "CPU A L'ARRET", 9, 68, "#d6dcb9", "7px monospace");
+    drawText(context, "XTENSA LX7 · 2 COEURS", 9, 88, "#d6dcb9", "7px monospace");
+    drawText(context, "CONSOLE UART DANS LE PANNEAU", 9, 108, "#eabf78", "6px monospace");
   } else {
     drawText(context, "CARDPUTER ADV VIRTUAL", 9, 30, "#f0f5db", "bold 8px monospace");
-    drawText(context, "ÉTAPE 3 SUR 5", 9, 49, "#a9e9ad", "8px monospace");
-    drawText(context, "PÉRIPHÉRIQUES MODÉLISÉS", 9, 68, "#d6dcb9", "7px monospace");
-    drawText(context, "PAS ENCORE DE CPU ÉMULÉ", 9, 84, "#eabf78", "7px monospace");
+    drawText(context, "ÉTAPE 4 SUR 5", 9, 49, "#a9e9ad", "8px monospace");
+    drawText(context, "MOTEUR ESP32-S3 LOCAL", 9, 68, "#d6dcb9", "7px monospace");
+    drawText(context, "PERIPHERIQUES A RACCORDER", 9, 84, "#eabf78", "7px monospace");
     drawText(context, "github.com/Yoyote84", 9, 108, "#91b68e", "7px monospace");
   }
 
   context.fillStyle = "#376548";
   context.fillRect(7, 127, 226, 1);
-  drawText(context, "STEP 03/05", 9, 133, "#8ab995", "6px monospace");
-  drawText(context, "NO CPU / DEVICE MODELS", 133, 133, "#d8a96d", "6px monospace");
+  drawText(context, "STEP 04/05", 9, 133, "#8ab995", "6px monospace");
+  drawText(context, "ESP32-S3 LOCAL RUNTIME", 133, 133, "#d8a96d", "6px monospace");
   renderThroughSt7789();
 }
 
@@ -496,6 +506,143 @@ function physicalKeyUp(event) {
   if (key) releaseKey(key, "keyboard");
 }
 
+
+function appendFirmwareConsole(text) {
+  const output = $("#firmware-console");
+  if (!output) return;
+  const current = output.textContent === "En attente d’un firmware…" ? "" : output.textContent;
+  output.textContent = (current + String(text)).slice(-16000);
+  output.scrollTop = output.scrollHeight;
+}
+
+function setFirmwareRuntimeStatus(message, stateName = "info") {
+  const status = $("#firmware-runtime-status");
+  if (status) {
+    status.textContent = message;
+    status.dataset.state = stateName;
+  }
+  const session = $("#runtime-state");
+  const detail = $("#runtime-state-detail");
+  if (session) session.textContent = stateName === "success" ? "ESP32-S3 prêt" : stateName === "error" ? "Erreur runtime" : message.slice(0, 52);
+  if (detail) detail.textContent = message;
+  const header = $("#header-status");
+  if (header?.lastElementChild) header.lastElementChild.textContent = stateName === "success" ? "RUNTIME ESP32-S3 LOCAL" : "MODÈLES MATÉRIELS LOCAUX";
+}
+
+function handleRuntimeMessage(event) {
+  const message = event.data || {};
+  if (message.type === "status") {
+    setFirmwareRuntimeStatus(message.message || "Initialisation du moteur…");
+  } else if (message.type === "loaded") {
+    state.runtimeLoaded = true;
+    state.runtimeRunning = false;
+    $("#firmware-engine-label").textContent = `${message.engine} · ${message.target}`;
+    $("#firmware-start").disabled = false;
+    $("#firmware-reset").disabled = false;
+    $("#firmware-stop").disabled = true;
+    $("#firmware-load").disabled = false;
+    setFirmwareRuntimeStatus(`BIN chargé dans le moteur ${message.engine} (${message.target}). Le démarrage exécute le CPU Xtensa.`, "success");
+    addEvent("RUNTIME", "Firmware chargé dans ESP32-S3");
+    drawScreen();
+  } else if (message.type === "running") {
+    state.runtimeRunning = true;
+    $("#firmware-start").disabled = true;
+    $("#firmware-stop").disabled = false;
+    setFirmwareRuntimeStatus("CPU ESP32-S3 en cours d’exécution. Les lignes UART apparaîtront ci-dessous.", "success");
+    drawScreen();
+  } else if (message.type === "stopped") {
+    state.runtimeRunning = false;
+    $("#firmware-start").disabled = !state.runtimeLoaded;
+    $("#firmware-stop").disabled = true;
+    setFirmwareRuntimeStatus("Exécution arrêtée. Le firmware reste chargé.", "info");
+    drawScreen();
+  } else if (message.type === "reset") {
+    state.runtimeRunning = true;
+    appendFirmwareConsole("\n[RESET CPU]\n");
+    addEvent("RUNTIME", "Reset du CPU ESP32-S3");
+    drawScreen();
+  } else if (message.type === "uart") {
+    appendFirmwareConsole(message.text || "");
+  } else if (message.type === "fault") {
+    state.runtimeRunning = false;
+    $("#firmware-start").disabled = false;
+    $("#firmware-stop").disabled = true;
+    setFirmwareRuntimeStatus(`Le moteur a arrêté sur une faute CPU : ${message.message}`, "error");
+    appendFirmwareConsole(`\n[FAULT] ${message.message}\n${message.report || ""}\n`);
+    addEvent("FAULT CPU", message.message);
+    drawScreen();
+  } else if (message.type === "error") {
+    state.runtimeRunning = false;
+    $("#firmware-start").disabled = !state.runtimeLoaded;
+    $("#firmware-stop").disabled = true;
+    setFirmwareRuntimeStatus(message.message || "Erreur inconnue du moteur.", "error");
+    appendFirmwareConsole(`\n[ERREUR] ${message.message || "Erreur"}\n${message.report || ""}\n`);
+    addEvent("ERREUR RUNTIME", message.message || "Erreur");
+    drawScreen();
+  }
+}
+
+function ensureFirmwareWorker() {
+  if (state.runtimeWorker) return state.runtimeWorker;
+  const runtimeWorker = new Worker("./emulator/esp-emu-worker.mjs", { type: "module" });
+  runtimeWorker.addEventListener("message", handleRuntimeMessage);
+  runtimeWorker.addEventListener("error", (event) => {
+    setFirmwareRuntimeStatus(`Le worker runtime a échoué : ${event.message}`, "error");
+    appendFirmwareConsole(`\n[WORKER] ${event.message}\n`);
+  });
+  state.runtimeWorker = runtimeWorker;
+  return runtimeWorker;
+}
+
+async function inspectSelectedFirmware(file) {
+  const { inspectFirmwareImage, sha256Hex, formatBytes } = await import("./emulator/firmware-image.mjs");
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const metadata = inspectFirmwareImage(bytes, { filename: file.name });
+  const checksum = await sha256Hex(bytes);
+  state.selectedFirmware = { file, bytes, metadata, checksum };
+  const details = [
+    `${file.name} · ${formatBytes(file.size)}`,
+    `SHA-256 ${checksum}`,
+    metadata.format === "esp-image" ? `Image ESP détectée à 0x${metadata.headerOffset.toString(16)} · ${metadata.segmentCount} segment(s) · entrée ${metadata.entryAddress}` : metadata.warning
+  ].filter(Boolean).join("\n");
+  $("#firmware-file-info").textContent = details;
+  $("#firmware-load").disabled = false;
+  setFirmwareRuntimeStatus("Image vérifiée localement. Clique sur « Importer le BIN » pour la transmettre au moteur.", "info");
+}
+
+async function loadSelectedFirmware() {
+  if (!state.selectedFirmware) return;
+  try {
+    const worker = ensureFirmwareWorker();
+    state.runtimeLoaded = false;
+    state.runtimeRunning = false;
+    $("#firmware-load").disabled = true;
+    $("#firmware-start").disabled = true;
+    $("#firmware-reset").disabled = true;
+    $("#firmware-stop").disabled = true;
+    $("#firmware-console").textContent = "";
+    $("#firmware-engine-label").textContent = "Chargement du moteur…";
+    setFirmwareRuntimeStatus("Chargement du moteur ESP-EMU et de l’image BIN…");
+    const transfer = state.selectedFirmware.bytes.slice().buffer;
+    worker.postMessage({ type: "LOAD", filename: state.selectedFirmware.file.name, buffer: transfer }, [transfer]);
+  } catch (error) {
+    setFirmwareRuntimeStatus(error.message, "error");
+    $("#firmware-load").disabled = false;
+  }
+}
+
+function startSelectedFirmware() {
+  if (state.runtimeLoaded) ensureFirmwareWorker().postMessage({ type: "START" });
+}
+
+function resetSelectedFirmware() {
+  if (state.runtimeLoaded) ensureFirmwareWorker().postMessage({ type: "RESET" });
+}
+
+function stopSelectedFirmware() {
+  if (state.runtimeWorker) state.runtimeWorker.postMessage({ type: "STOP" });
+}
+
 async function init() {
   try {
     const response = await fetch("./keyboard-layout.json", { cache: "no-cache" });
@@ -524,6 +671,22 @@ async function init() {
   $("#clear-events").addEventListener("click", clearEvents);
   $("#fullscreen-button").addEventListener("click", toggleFullscreen);
   $("#run-hardware-test").addEventListener("click", runHardwareSelfTest);
+  $("#firmware-file").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      await inspectSelectedFirmware(file);
+    } catch (error) {
+      state.selectedFirmware = null;
+      $("#firmware-load").disabled = true;
+      $("#firmware-file-info").textContent = error.message;
+      setFirmwareRuntimeStatus(error.message, "error");
+    }
+  });
+  $("#firmware-load").addEventListener("click", loadSelectedFirmware);
+  $("#firmware-start").addEventListener("click", startSelectedFirmware);
+  $("#firmware-reset").addEventListener("click", resetSelectedFirmware);
+  $("#firmware-stop").addEventListener("click", stopSelectedFirmware);
 
   renderPeripheralPanel();
   runHardwareSelfTest();
