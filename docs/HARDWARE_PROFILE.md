@@ -45,21 +45,17 @@ Les noms de signaux ci-dessous reprennent le tableau PinMap M5Stack. Les broches
 
 Résolution logique : 240 × 135 pixels. Le simulateur conservera ce framebuffer logique et mettra l'image à l'échelle sans modifier son rapport.
 
-### Clavier et IMU
+### Bus I²C interne partagé
 
-| Signal | GPIO |
-| --- | --- |
-| I2C SDA | G8 |
-| I2C SCL | G9 |
-| Interruption clavier TCA8418 | G11 |
+| Périphérique | Adresse 7 bits | Bus / broches | Détail de câblage |
+| --- | --- | --- | --- |
+| Clavier TCA8418RTWR | `0x34` | SDA G8, SCL G9, IRQ G11 | FIFO clavier 10 événements |
+| IMU BMI270 | `0x69` | SDA G8, SCL G9 | SDO relié au +3,3 V par R43 (3,3 kΩ), ce qui sélectionne 0x69 |
+| Codec ES8311 | `0x18` | SDA G8, SCL G9 | Adresse de codec utilisée par M5Unified |
 
-Le contrôleur TCA8418 est observé à l'adresse I²C 7 bits `0x34` (SDA G8, SCL G9, IRQ G11). Son FIFO matériel contient 10 événements. Le keymap et les codes scan non séquentiels ont été relevés sur un Cardputer ADV réel dans le projet communautaire [Cardputer-ADV-Keyboard](https://github.com/kamrrillo/Cardputer-ADV-Keyboard), sous licence MIT.
+Les trois composants partagent le même bus interne. Les adresses du BMI270 et du TCA8418 sont indiquées sur le schéma Cardputer ADV v1.0 (feuille 3 pour U7/U9) ; l'adresse ES8311 est celle du pilote M5Unified. La validation du profil vérifie ces valeurs documentées, mais un scan I²C sur ton appareil physique reste une vérification matérielle distincte.
 
-Le keymap de référence communautaire utilise l'adresse I2C 7 bits `0x34` pour le TCA8418. Cette adresse est notée à titre provisoire et devra être confirmée sur le Cardputer ADV physique ou dans les sources officielles avant de valider le pilote virtuel.
-| Contrôleur clavier | TCA8418RTWR |
-| Capteur de mouvement | BMI270 |
-
-Les deux composants utilisent le bus I2C publié. Les adresses I2C et détails de registres devront être validés à partir des fiches techniques des composants et/ou des sources M5Stack avant d'implémenter les modèles.
+Le BMI270 a ses broches INT1 et INT2 non routées sur le schéma ADV v1.0. Le simulateur ne doit donc pas inventer de ligne d'interruption IMU ; son modèle de mesures est piloté par polling.
 
 ### Audio ES8311
 
@@ -67,12 +63,12 @@ Les deux composants utilisent le bus I2C publié. Les adresses I2C et détails d
 | --- | --- |
 | I2C SDA | G8 |
 | I2C SCL | G9 |
-| SCLK | G41 |
-| ASDOUT | G46 |
-| LRCK | G43 |
-| DSDIN | G42 |
+| SCLK / BCLK | G41 |
+| ASDOUT (ADC vers ESP32) | G46 |
+| LRCK / WS | G43 |
+| DSDIN (ESP32 vers DAC) | G42 |
 
-L'implémentation devra respecter les directions et séquences de registres du codec. La seule présence des broches ne suffit pas à garantir une simulation audio fidèle.
+Aucune ligne MCLK dédiée n'est routée sur le Cardputer ADV. Le schéma et les réglages M5Unified utilisent BCLK (GPIO41) comme source MCLK du codec. Un pilote audio qui suppose l'existence d'une broche MCLK séparée serait donc incorrect pour cette carte.
 
 ### Infrarouge, batterie et microSD
 
