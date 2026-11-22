@@ -18,8 +18,19 @@
 | Contrat de runtime | Démarrage, arrêt, reset, mémoire flash, UART, événements GPIO |
 | Runtime ESP32-S3 | Exécution du CPU et des images flash |
 | Bus et adaptateurs | SPI, I2C, I2S, GPIO, ADC, UART |
-| Modèles Cardputer | ST7789V2, TCA8418, BMI270, ES8311, microSD, batterie, IR |
+| Modèles Cardputer | ST7789V2, TCA8418, BMI270, ES8311, NS4150B, microSD, batterie, IR et GPIO Grove/EXT |
 | Stockage virtuel | Flash, microSD virtuelle, snapshots et métadonnées |
+
+## Modèles matériels déjà implémentés (étape 3)
+
+Le rack de périphériques `createCardputerDeviceRack()` est indépendant du CPU. Il expose trois bus logiciels :
+- `VirtualI2CBus` pour TCA8418 (0x34), ES8311 (0x18) et BMI270 (0x69) ;
+- `VirtualSPIBus` pour l'écran ST7789V2 (CS GPIO37) et la carte microSD (CS GPIO12) ;
+- `VirtualI2SBus` pour le transport des blocs audio ES8311 et le chemin numérique NS4150B.
+
+Le TCA8418 reçoit les transitions du clavier dans son FIFO de 10 événements. L'écran garde un framebuffer RGB565 240×135. Le support microSD est un block-device SDHC à secteurs sparse avec CSD v2, annoncé à 128 Go sans allocation mémoire préalable. Les autres périphériques ont des modèles de registre, d'échantillons ou de signal de portée explicitement limitée.
+
+Les interfaces de modèles n'exécutent pas le code du Cardputer. À l'étape 4, le runtime CPU devra piloter ces bus et convertir les accès matériels du firmware en appels aux modèles.
 
 ## Contrat de runtime
 
