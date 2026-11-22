@@ -100,3 +100,26 @@ test('le script expose des événements séparés des pilotes matériels', async
   const wrapper = await read('../app/app.js');
   assert.ok(wrapper.includes('import("./app.mjs")'));
 });
+
+
+test('le panneau firmware expose import, cycle CPU et console UART', async () => {
+  const html = await read('../app/index.html');
+  const js = await read('../app/app.mjs');
+  assert.match(html, /id="firmware-file"/);
+  assert.match(html, /id="firmware-load"/);
+  assert.match(html, /id="firmware-start"/);
+  assert.match(html, /id="firmware-reset"/);
+  assert.match(html, /id="firmware-stop"/);
+  assert.match(html, /id="firmware-console"/);
+  assert.ok(js.includes('new Worker("./emulator/esp-emu-worker.mjs"'));
+  assert.ok(js.includes('type: "LOAD"'));
+  assert.ok(js.includes('type: "START"'));
+  assert.ok(js.includes('type: "RESET"'));
+  assert.ok(js.includes('type: "STOP"'));
+});
+
+test('le service worker met en cache l’importeur et le worker runtime', async () => {
+  const sw = await read('../app/sw.js');
+  assert.ok(sw.includes("'./emulator/firmware-image.mjs'"));
+  assert.ok(sw.includes("'./emulator/esp-emu-worker.mjs'"));
+});
