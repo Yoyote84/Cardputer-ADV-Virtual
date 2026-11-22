@@ -31,6 +31,12 @@ Le guide Velxio de construction QEMU renvoie à une archive source QEMU adaptée
 - **ES8311** : [Everest Semiconductor product brief](https://www.everest-semi.com/pdf/ES8311%20PB.pdf), référence fonctionnelle du codec. Le modèle de ce projet n'intègre aucun code tiers du codec.
 - **ST7789V2, microSD, GPIO, ADC et IR** : modèles indépendants écrits à partir des spécifications publiques et du profil M5Stack ; aucune source QEMU ou bibliothèque de pilote propriétaire n'est intégrée.
 
+## Adresses I²C internes et audio
+
+- **BMI270 à 0x69** : la transcription du schéma Cardputer ADV v1.0 indique U7 SDO tiré au +3,3 V par R43 et l'annotation « 7-bit Address 69H ». Référence de lecture du schéma : [developing-today/hardware-doc — Cardputer ADV schematic netlist](https://github.com/developing-today/hardware-doc/blob/main/devices/m5stack/cardputer-adv/schematic-netlist.md). Aucune image ou donnée de firmware Bosch n'est copiée.
+- **ES8311 à 0x18** : adresse par défaut du codec dans [M5Stack/M5Unified](https://github.com/m5stack/M5Unified/blob/master/src/M5Unified.cpp) ; M5Stack publie M5Unified sous licence MIT. Aucune source du pilote n'est copiée.
+- **Pilotes M5Stack** : les références [TCA8418](https://github.com/m5stack/uiflow-micropython/blob/master/m5stack/libs/driver/tca8418.py), [BMI270/BMM150](https://github.com/m5stack/uiflow-micropython/blob/master/m5stack/libs/driver/bmi270_bmm150.py) et [ES8311](https://github.com/m5stack/uiflow-micropython/tree/master/m5stack/libs/driver/es8311) sont publiées sous MIT dans le dépôt UIFlow MicroPython ; ce projet ne copie pas leur code ni les blobs de configuration capteur.
+
 ## M5Stack Cardputer ADV
 
 Les dimensions, composants et brochages du profil matériel proviennent de la [documentation officielle M5Stack](https://docs.m5stack.com/en/core/Cardputer-Adv). M5Stack et Cardputer sont des marques de leurs propriétaires respectifs. Ce dépôt est un projet communautaire indépendant et n'est ni affilié à M5Stack ni approuvé par M5Stack.
