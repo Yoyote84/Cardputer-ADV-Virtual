@@ -123,3 +123,16 @@ test('le service worker met en cache l’importeur et le worker runtime', async 
   assert.ok(sw.includes("'./emulator/firmware-image.mjs'"));
   assert.ok(sw.includes("'./emulator/esp-emu-worker.mjs'"));
 });
+
+
+test('l’interface offre l’import des symboles ELF, le pas CPU et les métriques', async () => {
+  const html = await read('../app/index.html');
+  const js = await read('../app/app.mjs');
+  assert.match(html, /id="firmware-elf-file"/);
+  assert.match(html, /id="firmware-elf-load"/);
+  assert.match(html, /id="firmware-step"/);
+  assert.match(html, /id="firmware-metrics"/);
+  assert.ok(js.includes('type: "LOAD_ELF"'));
+  assert.ok(js.includes('type: "STEP"'));
+  assert.ok(js.includes('message.type === "metrics"'));
+});
