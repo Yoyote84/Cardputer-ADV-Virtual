@@ -44,7 +44,10 @@
       "interrupt": 11
     },
     "i2c_address": 52,
-    "keymap_status": "community_reference_pending_device_verification"
+    "keymap_status": "empirically_captured_on_physical_cardputer_adv",
+    "fifo_depth": 10,
+    "keymap_source": "https://github.com/kamrrillo/Cardputer-ADV-Keyboard",
+    "keymap_license": "MIT"
   },
   "imu": {
     "controller": "BMI270",
