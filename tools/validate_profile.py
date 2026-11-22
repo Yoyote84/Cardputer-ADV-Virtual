@@ -65,7 +65,7 @@ def main() -> None:
         fail("codec audio attendu : ES8311")
     if audio.get("i2c_address") != 0x18:
         fail("ES8311 doit utiliser l'adresse I2C 0x18")
-    if audio.get("mclk_pin") is not None or audio.get("mclk_source") != "BCLK (GPIO41) is used as MCLK; no separate MCLK pin is routed":
+    if audio.get("mclk_pin") is not None or audio.get("mclk_source") != "BCLK":
         fail("l'ES8311 du Cardputer ADV doit utiliser BCLK GPIO41 comme MCLK et ne pas inventer de pin MCLK")
     if data.get("battery", {}).get("capacity_mah") != 1500:
         fail("la capacité doit suivre la fiche M5Stack actuelle : 1500 mAh")
