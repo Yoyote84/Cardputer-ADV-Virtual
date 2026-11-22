@@ -9,7 +9,7 @@ La disposition ci-dessous et les codes FIFO sont ceux publiés par [kamrrillo/Ca
 | Rangée | Légendes physiques, de gauche à droite | Codes bruts TCA8418 |
 | --- | --- | --- |
 | 1 | esc, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, -, =, del | 1, 5, 11, 15, 21, 25, 31, 35, 41, 45, 51, 55, 61, 65 |
-| 2 | tab, q, w, e, r, t, y, u, i, o, p, [, ], \ | 2, 6, 12, 16, 22, 26, 32, 36, 42, 46, 52, 56, 62, 66 |
+| 2 | tab, q, w, e, r, t, y, u, i, o, p, [, ], `\\` | 2, 6, 12, 16, 22, 26, 32, 36, 42, 46, 52, 56, 62, 66 |
 | 3 | fn, Aa, a, s, d, f, g, h, j, k, l, ↑, ', enter | 3, 7, 13, 17, 23, 27, 33, 37, 43, 47, 53, 57, 63, 67 |
 | 4 | ctrl, opt, alt, z, x, c, v, b, n, m, ←, ↓, →, space | 4, 8, 14, 18, 24, 28, 34, 38, 44, 48, 54, 58, 64, 68 |
 
