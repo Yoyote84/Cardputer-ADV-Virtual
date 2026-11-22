@@ -8,9 +8,7 @@ const APP_ASSETS = [
   './app.js',
   './keyboard-layout.json',
   './manifest.webmanifest',
-  './icons/cardputer.svg',
-  './icons/cardputer-192.png',
-  './icons/cardputer-512.png'
+  './icons/cardputer.svg'
 ];
 
 self.addEventListener('install', (event) => {
