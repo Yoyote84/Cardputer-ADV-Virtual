@@ -1,23 +1,32 @@
-# Matrice de compatibilité initiale
+# Matrice de compatibilité — Cardputer ADV Virtual
 
-**État à la fin de l'étape 1 : aucune exécution de firmware Cardputer n'est encore démontrée.**
+**État après l'implémentation logicielle de l'étape 3/5.**  
+Les modèles matériels ci-dessous sont exécutables comme modules JavaScript autonomes et sont couverts par des tests Node.js. Ils ne sont pas encore pilotés par un firmware ESP32-S3 : le raccordement CPU est l'objet de l'étape 4.
 
-| Élément | Objectif | État actuel | Preuve requise |
+| Élément | Modèle présent | Couverture réelle | Limite ou preuve à ajouter |
 | --- | --- | --- | --- |
-| ESP32-S3FN8 / Xtensa LX7 | Exécution du vrai firmware | Non implémenté dans ce dépôt | Firmware de test démarré localement |
-| Flash 8 Mo | Image flash virtuelle | Profil documenté | Lecture/écriture et reset vérifiés |
-| ST7789V2 | Framebuffer 240 × 135 | Spécification documentée | Test SPI et image de référence |
-| TCA8418 | Clavier 56 touches | Spécification documentée | Lecture du registre de touches depuis un firmware |
-| BMI270 | Accéléromètre + gyroscope | Spécification documentée | Lecture de registres I2C et valeurs de capteurs |
-| ES8311 | Codec audio | Broches documentées | Séquence I2C et flux I2S testés |
-| NS4150B / haut-parleur | Sortie sonore | Spécification documentée | Test de sortie audio |
-| Microphone MEMS | Entrée audio | Spécification documentée | Échantillons injectés vers le chemin audio |
-| microSD | Système de fichiers virtuel | Brochage documenté | Lecture/écriture FAT depuis un firmware |
-| IR TX | Transmission IR | Brochage documenté | Capture de forme d'onde |
-| Batterie ADC | Mesure batterie | Brochage documenté | Valeur ADC contrôlable |
-| Grove / EXT | Extensions GPIO et bus | Brochage documenté | Tests GPIO et bus |
-| Wi-Fi / BLE ESP32-S3 | Réseau simulé | Non implémenté | Contrat local et tests isolés |
+| ESP32-S3FN8 / Xtensa LX7 | Non | Aucun CPU émulé | Étape 4 : démarrer un vrai firmware BIN local |
+| Flash interne 8 Mo | Profil seulement | Capacité documentée | Étape 4 : image flash, partitions, NVS et reset |
+| Bus I²C | Oui | Adresses 7 bits, lecture/écriture registre, scan et trace | Les périphériques non raccordés au rack restent absents du scan |
+| TCA8418 clavier | Oui | Adresse 0x34, registres utilisés, FIFO 10 événements, press/release, flags et W1C | Scan électrique, debounce et fonctions GPIO avancées non émulés |
+| Clavier visuel | Oui | 56 légendes et codes empiriques, 4×14, Fn momentané, Aa toggle, press/release | Dimensions/texture des keycaps et comparaison photographique à confirmer sur le Z Flip6 |
+| ST7789V2 | Oui | Commandes de base, fenêtres, RAMWR, RGB565 et framebuffer 240×135 | Timings électriques, tearing, consommation et commandes rares non modélisés |
+| BMI270 | Partiel | CHIP_ID, statut de base, axes bruts contrôlables, reset et trace d'initialisation | Image de configuration Bosch, FIFO capteur, algorithmes intégrés et interruptions avancées absents |
+| ES8311 | Partiel | ID, registres de contrôle et files d'échantillons I²S | Horloges bit/word, conversions analogiques et configuration audio complète non garanties |
+| NS4150B / haut-parleur | Partiel | Gain numérique, mute et saturation de blocs audio | Étape Class-D, rail d'alimentation, impédance/charge et acoustique non émulés |
+| Microphone MEMS | Partiel | Injection d'échantillons numériques dans l'entrée I²S simulée | Réponse fréquentielle, bruit et capsule physique non modélisés |
+| microSD | Partiel | SPI, init SDHC, CSD v2, CMD17/CMD24 et stockage sparse annoncé 128 Go | CMD18/CMD25, CRC, timing et modes SD complets à vérifier |
+| Batterie / ADC GPIO10 | Partiel | Valeur ADC brute contrôlable | Diviseur, tension de référence, courbe tension/% et autodécharge non calibrés |
+| IR TX GPIO44 | Partiel | Capture des durées de pulse et fréquence porteuse | Porteuse électrique, LED IR et propagation optique non modélisées |
+| GPIO / Grove / EXT | Partiel | Entrées/sorties, ADC brut et table de contacts | Électricité analogique, protections et modules branchés non simulés |
+| Cap LoRa/GNSS optionnel | Réservé | Ports et contrat d'extension préparés, aucun modèle radio concret | Profil SX1262/GNSS séparé à documenter avant implémentation |
+| Wi‑Fi / BLE | Non | Aucun réseau ESP32 simulé | À traiter avec le runtime/protocole de l'étape 4 |
 
 ## Règle d'annonce
 
-Un élément ne passe à « émulé et testé » qu'après un test reproductible. La documentation matérielle ou une représentation graphique ne suffit pas.
+- **Modélisé et testé** : les tests du modèle logiciel passent.
+- **Partiel** : certaines fonctions du composant sont modélisées ; les limites ci-dessus restent applicables.
+- **Non implémenté** : ne doit pas être présenté comme fonctionnel.
+- **Firmware compatible** : uniquement après un test reproductible avec le vrai runtime ESP32-S3 de l'étape 4.
+
+Un modèle d'écran ou de clavier ne prouve pas, à lui seul, qu'un fichier BIN est exécuté.
