@@ -406,14 +406,21 @@ function runHardwareSelfTest() {
   try {
     const addresses = i2c.scan();
     checks.push({ name: "I²C", ok: [0x18, 0x34, 0x69].every((address) => addresses.includes(address)) });
-    checks.push({ name: "TCA8418", ok: i2c.readByte(TCA_ADDRESS, TCA_EVENT_COUNT) >= 0 });
+    tca8418.pressKey(5);
+    const keyDownEvent = i2c.readByte(TCA_ADDRESS, TCA_EVENT_A);
+    i2c.writeByte(TCA_ADDRESS, TCA_INT_STAT, TCA_INT_MASK);
+    tca8418.releaseKey(5);
+    const keyUpEvent = i2c.readByte(TCA_ADDRESS, TCA_EVENT_A);
+    i2c.writeByte(TCA_ADDRESS, TCA_INT_STAT, TCA_INT_MASK);
+    checks.push({ name: "TCA8418 FIFO press/release", ok: keyDownEvent === 0x85 && keyUpEvent === 0x05 });
     checks.push({ name: "BMI270 CHIP_ID", ok: i2c.readByte(0x69, 0x00) === 0x24 });
     const codecId = i2c.read(0x18, 0xfd, 2);
     checks.push({ name: "ES8311 ID", ok: codecId[0] === 0x83 && codecId[1] === 0x11 });
     checks.push({ name: "ST7789 framebuffer", ok: display.width === 240 && display.height === 135 && display.framebuffer.length === 32400 });
     const sample = Uint8Array.from({ length: 512 }, (_, index) => index & 0xff);
     checks.push({ name: "microSD block R/W", ok: sdCard.writeBlock(0, sample) && sdCard.readBlock(0)[255] === 255 });
-    checks.push({ name: "GPIO / ADC", ok: (battery.readRawADC() | 0) >= 0 });
+    battery.setRawADC(2048);
+    checks.push({ name: "GPIO / ADC", ok: battery.readRawADC() === 2048 });
     const passed = checks.filter((check) => check.ok).length;
     const output = $("#hardware-test-result");
     output.textContent = `${passed}/${checks.length} contrôles réussis · ${checks.filter((check) => !check.ok).map((check) => check.name).join(", ") || "aucune erreur"}`;
@@ -501,9 +508,9 @@ async function init() {
   window.addEventListener("keydown", physicalKeyDown);
   window.addEventListener("keyup", physicalKeyUp);
   window.addEventListener("blur", () => {
-    for (const [keyId, key] of [...state.heldPointers.entries()]) {
-      const [, id] = keyId.split(":");
-      releaseKey(key, "blur");
+    for (const [token, key] of [...state.heldPointers.entries()]) {
+      const [source, id] = token.split(":");
+      releaseKey(key, source);
       state.keyElements.get(id)?.classList.remove("is-pressed");
     }
   });
