@@ -21,7 +21,7 @@ Le guide Velxio de construction QEMU renvoie à une archive source QEMU adaptée
 - Référence : [kamrrillo/Cardputer-ADV-Keyboard](https://github.com/kamrrillo/Cardputer-ADV-Keyboard).
 - Licence annoncée dans le dépôt de référence : MIT.
 - Utilisation dans ce projet : référence du positionnement des touches, des codes et de quelques combinaisons Fn ; aucun code source du pilote n'a été copié.
-- Les détails matériels de l'interface TCA8418 (FIFO, registres, interruptions et timings) seront modélisés et vérifiés séparément à l'étape 3.
+- Le modèle TCA8418 local reprend les registres clavier et le FIFO décrits par la fiche TI SCPS215G. Le scan électrique, le debounce matériel et les timings précis restent hors de couverture ; voir `app/emulator/README.md`.
 
 ## Modèles et documentation des périphériques
 
