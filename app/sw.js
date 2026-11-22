@@ -14,6 +14,7 @@ const APP_ASSETS = [
   './emulator/st7789v2.mjs',
   './emulator/bmi270.mjs',
   './emulator/es8311.mjs',
+  './emulator/ns4150b.mjs',
   './emulator/sd-spi-card.mjs',
   './emulator/simple-peripherals.mjs',
   './emulator/device-rack.mjs',
