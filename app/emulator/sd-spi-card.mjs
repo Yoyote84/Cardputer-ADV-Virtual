@@ -7,7 +7,9 @@ export class SDSpiCard {
   constructor({ capacityBlocks = 4096 } = {}) {
     if (!Number.isInteger(capacityBlocks) || capacityBlocks < 1) throw new RangeError("Capacité SD invalide.");
     this.capacityBlocks = capacityBlocks;
-    this.storage = new Uint8Array(capacityBlocks * 512);
+    // Sparse sectors keep a large virtual card usable on a phone without
+    // reserving the full advertised capacity in RAM.
+    this.blocks = new Map();
     this.selected = false;
     this.idle = true;
     this.appCommandPending = false;
@@ -117,16 +119,22 @@ export class SDSpiCard {
         this.blockLength = argument;
         this.responseQueue.push(this.idle ? 0x01 : (argument === 512 ? 0x00 : 0x04));
         break;
+      case 9: // CMD9: SEND_CSD
+        if (this.idle) {
+          this.responseQueue.push(0x01);
+        } else {
+          const csd = this.createCSD();
+          this.responseQueue.push(0x00, 0xfe, ...csd, 0xff, 0xff);
+        }
+        break;
       case 17: // CMD17: READ_SINGLE_BLOCK
         if (this.idle) {
           this.responseQueue.push(0x01);
         } else if (argument >= this.capacityBlocks) {
           this.responseQueue.push(0x20);
         } else {
-          const start = argument * 512;
-          this.responseQueue.push(0x00, 0xfe);
-          for (let i = 0; i < 512; i += 1) this.responseQueue.push(this.storage[start + i]);
-          this.responseQueue.push(0xff, 0xff); // CRC placeholder; CRC checking is not enabled
+          const block = this.readBlock(argument);
+          this.responseQueue.push(0x00, 0xfe, ...block, 0xff, 0xff); // CRC placeholder
         }
         break;
       case 24: // CMD24: WRITE_BLOCK
@@ -155,27 +163,45 @@ export class SDSpiCard {
 
   readBlock(index) {
     if (!Number.isInteger(index) || index < 0 || index >= this.capacityBlocks) throw new RangeError("Bloc SD hors capacité.");
-    return this.storage.slice(index * 512, (index + 1) * 512);
+    const block = this.blocks.get(index);
+    return block ? block.slice() : new Uint8Array(512);
   }
 
   writeBlock(index, bytes) {
     if (!Number.isInteger(index) || index < 0 || index >= this.capacityBlocks) return false;
     const block = Uint8Array.from(bytes);
     if (block.length !== 512) return false;
-    this.storage.set(block, index * 512);
+    this.blocks.set(index, block);
     return true;
+  }
+
+  createCSD() {
+    // SDHC/SDXC CSD v2.0. Capacity field is in 512 KiB units.
+    const csd = new Uint8Array(16);
+    const capacityBytes = this.capacityBlocks * 512;
+    const cSize = Math.max(0, Math.min(0x3fffff, Math.ceil(capacityBytes / 524288) - 1));
+    csd[0] = 0x40; // CSD_STRUCTURE = 1
+    csd[5] = 0x09; // READ_BL_LEN = 512 bytes
+    csd[7] = (cSize >> 16) & 0x3f;
+    csd[8] = (cSize >> 8) & 0xff;
+    csd[9] = cSize & 0xff;
+    csd[15] = 0x01; // end bit; CRC is not validated by this prototype
+    return csd;
   }
 
   get status() {
     return {
       chipSelectGpio: 12,
       capacityBlocks: this.capacityBlocks,
-      capacityBytes: this.storage.length,
+      capacityBytes: this.capacityBlocks * 512,
+      allocatedBlocks: this.blocks.size,
+      allocatedBytes: this.blocks.size * 512,
       blockSize: 512,
       mode: "SPI",
       idle: this.idle,
       writeInProgress: Boolean(this.writeState),
       commandsSeen: this.commands.length,
+      csdVersion: 2,
       crcValidation: "not-implemented"
     };
   }
