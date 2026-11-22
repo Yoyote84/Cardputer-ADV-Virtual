@@ -541,6 +541,7 @@ function handleRuntimeMessage(event) {
     $("#firmware-start").disabled = false;
     $("#firmware-reset").disabled = false;
     $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = false;
     $("#firmware-load").disabled = false;
     setFirmwareRuntimeStatus(`BIN chargé dans le moteur ${message.engine} (${message.target}). Le démarrage exécute le CPU Xtensa.`, "success");
     addEvent("RUNTIME", "Firmware chargé dans ESP32-S3");
@@ -549,12 +550,14 @@ function handleRuntimeMessage(event) {
     state.runtimeRunning = true;
     $("#firmware-start").disabled = true;
     $("#firmware-stop").disabled = false;
+    $("#firmware-step").disabled = true;
     setFirmwareRuntimeStatus("CPU ESP32-S3 en cours d’exécution. Les lignes UART apparaîtront ci-dessous.", "success");
     drawScreen();
   } else if (message.type === "stopped") {
     state.runtimeRunning = false;
     $("#firmware-start").disabled = !state.runtimeLoaded;
     $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = false;
     setFirmwareRuntimeStatus("Exécution arrêtée. Le firmware reste chargé.", "info");
     drawScreen();
   } else if (message.type === "reset") {
@@ -583,9 +586,9 @@ function handleRuntimeMessage(event) {
     appendFirmwareConsole(message.text || "");
   } else if (message.type === "fault") {
     state.runtimeRunning = false;
-    $("#firmware-start").disabled = false;
+    $("#firmware-start").disabled = true;
     $("#firmware-stop").disabled = true;
-    $("#firmware-step").disabled = false;
+    $("#firmware-step").disabled = true;
     setFirmwareRuntimeStatus(`Le moteur a arrêté sur une faute CPU : ${message.message}`, "error");
     appendFirmwareConsole(`\n[FAULT] ${message.message}\n${message.report || ""}\n`);
     addEvent("FAULT CPU", message.message);
@@ -658,6 +661,7 @@ async function loadSelectedFirmware() {
     $("#firmware-start").disabled = true;
     $("#firmware-reset").disabled = true;
     $("#firmware-stop").disabled = true;
+    $("#firmware-step").disabled = true;
     $("#firmware-console").textContent = "";
     $("#firmware-engine-label").textContent = "Chargement du moteur…";
     setFirmwareRuntimeStatus("Chargement du moteur ESP-EMU et de l’image BIN…");
