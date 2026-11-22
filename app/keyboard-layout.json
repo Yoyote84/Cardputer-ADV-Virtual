@@ -5,67 +5,521 @@
   "keyCount": 56,
   "controller": "TCA8418RTWR",
   "i2cAddress": "0x34",
+  "fifoDepth": 10,
   "source": "https://github.com/kamrrillo/Cardputer-ADV-Keyboard",
   "sourceLicense": "MIT",
+  "mappingStatus": "empirically_captured_on_physical_cardputer_adv",
+  "fnBehavior": "momentary_while_held",
+  "capsBehavior": "toggle_on_press",
   "keys": [
-    {"id":"esc","label":"esc","normal":"ESC","fn":null,"code":"Escape","rawCode":1,"type":"action"},
-    {"id":"1","label":"1","normal":"1","fn":"!","code":"Digit1","rawCode":5,"type":"character"},
-    {"id":"2","label":"2","normal":"2","fn":"@","code":"Digit2","rawCode":11,"type":"character"},
-    {"id":"3","label":"3","normal":"3","fn":"#","code":"Digit3","rawCode":15,"type":"character"},
-    {"id":"4","label":"4","normal":"4","fn":"$","code":"Digit4","rawCode":21,"type":"character"},
-    {"id":"5","label":"5","normal":"5","fn":"%","code":"Digit5","rawCode":25,"type":"character"},
-    {"id":"6","label":"6","normal":"6","fn":"^","code":"Digit6","rawCode":31,"type":"character"},
-    {"id":"7","label":"7","normal":"7","fn":"&","code":"Digit7","rawCode":35,"type":"character"},
-    {"id":"8","label":"8","normal":"8","fn":"*","code":"Digit8","rawCode":41,"type":"character"},
-    {"id":"9","label":"9","normal":"9","fn":"(","code":"Digit9","rawCode":45,"type":"character"},
-    {"id":"0","label":"0","normal":"0","fn":")","code":"Digit0","rawCode":51,"type":"character"},
-    {"id":"minus","label":"−","normal":"-","fn":"_","code":"Minus","rawCode":55,"type":"character"},
-    {"id":"equal","label":"=","normal":"=","fn":"+","code":"Equal","rawCode":61,"type":"character"},
-    {"id":"del","label":"del","normal":"BACKSPACE","fn":null,"code":"Backspace","rawCode":65,"type":"action"},
-
-    {"id":"tab","label":"tab","normal":"TAB","fn":null,"code":"Tab","rawCode":2,"type":"action"},
-    {"id":"q","label":"Q","normal":"q","fn":null,"code":"KeyQ","rawCode":6,"type":"character"},
-    {"id":"w","label":"W","normal":"w","fn":null,"code":"KeyW","rawCode":12,"type":"character"},
-    {"id":"e","label":"E","normal":"e","fn":null,"code":"KeyE","rawCode":16,"type":"character"},
-    {"id":"r","label":"R","normal":"r","fn":null,"code":"KeyR","rawCode":22,"type":"character"},
-    {"id":"t","label":"T","normal":"t","fn":null,"code":"KeyT","rawCode":26,"type":"character"},
-    {"id":"y","label":"Y","normal":"y","fn":null,"code":"KeyY","rawCode":32,"type":"character"},
-    {"id":"u","label":"U","normal":"u","fn":null,"code":"KeyU","rawCode":36,"type":"character"},
-    {"id":"i","label":"I","normal":"i","fn":null,"code":"KeyI","rawCode":42,"type":"character"},
-    {"id":"o","label":"O","normal":"o","fn":null,"code":"KeyO","rawCode":46,"type":"character"},
-    {"id":"p","label":"P","normal":"p","fn":null,"code":"KeyP","rawCode":52,"type":"character"},
-    {"id":"bracket-left","label":"[","normal":"[","fn":null,"code":"BracketLeft","rawCode":56,"type":"character"},
-    {"id":"bracket-right","label":"]","normal":"]","fn":null,"code":"BracketRight","rawCode":62,"type":"character"},
-    {"id":"backslash","label":"\\","normal":"\\","fn":null,"code":"Backslash","rawCode":66,"type":"character"},
-
-    {"id":"fn","label":"fn","normal":"FN","fn":null,"code":"F1","rawCode":3,"type":"modifier","accent":"orange"},
-    {"id":"caps","label":"Aa","normal":"CAPS","fn":null,"code":"CapsLock","rawCode":7,"type":"modifier","accent":"cyan"},
-    {"id":"a","label":"A","normal":"a","fn":null,"code":"KeyA","rawCode":13,"type":"character"},
-    {"id":"s","label":"S","normal":"s","fn":null,"code":"KeyS","rawCode":17,"type":"character"},
-    {"id":"d","label":"D","normal":"d","fn":null,"code":"KeyD","rawCode":23,"type":"character"},
-    {"id":"f","label":"F","normal":"f","fn":null,"code":"KeyF","rawCode":27,"type":"character"},
-    {"id":"g","label":"G","normal":"g","fn":null,"code":"KeyG","rawCode":33,"type":"character"},
-    {"id":"h","label":"H","normal":"h","fn":null,"code":"KeyH","rawCode":37,"type":"character"},
-    {"id":"j","label":"J","normal":"j","fn":null,"code":"KeyJ","rawCode":43,"type":"character"},
-    {"id":"k","label":"K","normal":"k","fn":null,"code":"KeyK","rawCode":47,"type":"character"},
-    {"id":"l","label":"L","normal":"l","fn":null,"code":"KeyL","rawCode":53,"type":"character"},
-    {"id":"up","label":"▲","normal":"ARROW_UP","fn":";","code":"ArrowUp","rawCode":57,"type":"action"},
-    {"id":"apostrophe","label":"’","normal":"'","fn":null,"code":"Quote","rawCode":63,"type":"character"},
-    {"id":"enter","label":"↵","normal":"ENTER","fn":null,"code":"Enter","rawCode":67,"type":"action"},
-
-    {"id":"ctrl","label":"ctrl","normal":"CTRL","fn":null,"code":"ControlLeft","rawCode":4,"type":"modifier"},
-    {"id":"opt","label":"opt","normal":"OPT","fn":null,"code":"MetaLeft","rawCode":8,"type":"modifier","accent":"green"},
-    {"id":"alt","label":"alt","normal":"ALT","fn":null,"code":"AltLeft","rawCode":14,"type":"modifier"},
-    {"id":"z","label":"Z","normal":"z","fn":null,"code":"KeyZ","rawCode":18,"type":"character"},
-    {"id":"x","label":"X","normal":"x","fn":null,"code":"KeyX","rawCode":24,"type":"character"},
-    {"id":"c","label":"C","normal":"c","fn":null,"code":"KeyC","rawCode":28,"type":"character"},
-    {"id":"v","label":"V","normal":"v","fn":null,"code":"KeyV","rawCode":34,"type":"character"},
-    {"id":"b","label":"B","normal":"b","fn":null,"code":"KeyB","rawCode":38,"type":"character"},
-    {"id":"n","label":"N","normal":"n","fn":null,"code":"KeyN","rawCode":44,"type":"character"},
-    {"id":"m","label":"M","normal":"m","fn":null,"code":"KeyM","rawCode":48,"type":"character"},
-    {"id":"left","label":"◀","normal":"ARROW_LEFT","fn":",","code":"ArrowLeft","rawCode":54,"type":"action"},
-    {"id":"down","label":"▼","normal":"ARROW_DOWN","fn":".","code":"ArrowDown","rawCode":58,"type":"action"},
-    {"id":"right","label":"▶","normal":"ARROW_RIGHT","fn":"/","code":"ArrowRight","rawCode":64,"type":"action"},
-    {"id":"space","label":"space","normal":"SPACE","fn":null,"code":"Space","rawCode":68,"type":"action"}
+    {
+      "id": "esc",
+      "legend": "esc",
+      "normal": "KEY_ESC",
+      "fn": "KEY_ESC",
+      "code": "Escape",
+      "rawCode": 1,
+      "type": "action"
+    },
+    {
+      "id": "1",
+      "legend": "1",
+      "normal": "1",
+      "fn": "!",
+      "code": "Digit1",
+      "rawCode": 5,
+      "type": "character"
+    },
+    {
+      "id": "2",
+      "legend": "2",
+      "normal": "2",
+      "fn": "@",
+      "code": "Digit2",
+      "rawCode": 11,
+      "type": "character"
+    },
+    {
+      "id": "3",
+      "legend": "3",
+      "normal": "3",
+      "fn": "#",
+      "code": "Digit3",
+      "rawCode": 15,
+      "type": "character"
+    },
+    {
+      "id": "4",
+      "legend": "4",
+      "normal": "4",
+      "fn": "$",
+      "code": "Digit4",
+      "rawCode": 21,
+      "type": "character"
+    },
+    {
+      "id": "5",
+      "legend": "5",
+      "normal": "5",
+      "fn": "%",
+      "code": "Digit5",
+      "rawCode": 25,
+      "type": "character"
+    },
+    {
+      "id": "6",
+      "legend": "6",
+      "normal": "6",
+      "fn": "^",
+      "code": "Digit6",
+      "rawCode": 31,
+      "type": "character"
+    },
+    {
+      "id": "7",
+      "legend": "7",
+      "normal": "7",
+      "fn": "&",
+      "code": "Digit7",
+      "rawCode": 35,
+      "type": "character"
+    },
+    {
+      "id": "8",
+      "legend": "8",
+      "normal": "8",
+      "fn": "*",
+      "code": "Digit8",
+      "rawCode": 41,
+      "type": "character"
+    },
+    {
+      "id": "9",
+      "legend": "9",
+      "normal": "9",
+      "fn": "(",
+      "code": "Digit9",
+      "rawCode": 45,
+      "type": "character"
+    },
+    {
+      "id": "0",
+      "legend": "0",
+      "normal": "0",
+      "fn": ")",
+      "code": "Digit0",
+      "rawCode": 51,
+      "type": "character"
+    },
+    {
+      "id": "minus",
+      "legend": "-",
+      "normal": "-",
+      "fn": "_",
+      "code": "Minus",
+      "rawCode": 55,
+      "type": "character"
+    },
+    {
+      "id": "equal",
+      "legend": "=",
+      "normal": "=",
+      "fn": "+",
+      "code": "Equal",
+      "rawCode": 61,
+      "type": "character"
+    },
+    {
+      "id": "del",
+      "legend": "del",
+      "normal": "\b",
+      "fn": "\b",
+      "code": "Backspace",
+      "rawCode": 65,
+      "type": "action"
+    },
+    {
+      "id": "tab",
+      "legend": "tab",
+      "normal": "KEY_TAB",
+      "fn": "KEY_TAB",
+      "code": "Tab",
+      "rawCode": 2,
+      "type": "action"
+    },
+    {
+      "id": "q",
+      "legend": "q",
+      "normal": "q",
+      "fn": "Q",
+      "code": "KeyQ",
+      "rawCode": 6,
+      "type": "character"
+    },
+    {
+      "id": "w",
+      "legend": "w",
+      "normal": "w",
+      "fn": "W",
+      "code": "KeyW",
+      "rawCode": 12,
+      "type": "character"
+    },
+    {
+      "id": "e",
+      "legend": "e",
+      "normal": "e",
+      "fn": "E",
+      "code": "KeyE",
+      "rawCode": 16,
+      "type": "character"
+    },
+    {
+      "id": "r",
+      "legend": "r",
+      "normal": "r",
+      "fn": "R",
+      "code": "KeyR",
+      "rawCode": 22,
+      "type": "character"
+    },
+    {
+      "id": "t",
+      "legend": "t",
+      "normal": "t",
+      "fn": "T",
+      "code": "KeyT",
+      "rawCode": 26,
+      "type": "character"
+    },
+    {
+      "id": "y",
+      "legend": "y",
+      "normal": "y",
+      "fn": "Y",
+      "code": "KeyY",
+      "rawCode": 32,
+      "type": "character"
+    },
+    {
+      "id": "u",
+      "legend": "u",
+      "normal": "u",
+      "fn": "U",
+      "code": "KeyU",
+      "rawCode": 36,
+      "type": "character"
+    },
+    {
+      "id": "i",
+      "legend": "i",
+      "normal": "i",
+      "fn": "I",
+      "code": "KeyI",
+      "rawCode": 42,
+      "type": "character"
+    },
+    {
+      "id": "o",
+      "legend": "o",
+      "normal": "o",
+      "fn": "O",
+      "code": "KeyO",
+      "rawCode": 46,
+      "type": "character"
+    },
+    {
+      "id": "p",
+      "legend": "p",
+      "normal": "p",
+      "fn": "P",
+      "code": "KeyP",
+      "rawCode": 52,
+      "type": "character"
+    },
+    {
+      "id": "bracket-left",
+      "legend": "[",
+      "normal": "[",
+      "fn": "{",
+      "code": "BracketLeft",
+      "rawCode": 56,
+      "type": "character"
+    },
+    {
+      "id": "bracket-right",
+      "legend": "]",
+      "normal": "]",
+      "fn": "}",
+      "code": "BracketRight",
+      "rawCode": 62,
+      "type": "character"
+    },
+    {
+      "id": "backslash",
+      "legend": "\\",
+      "normal": "\\",
+      "fn": "|",
+      "code": "Backslash",
+      "rawCode": 66,
+      "type": "character"
+    },
+    {
+      "id": "fn",
+      "legend": "fn",
+      "normal": "KEY_FN",
+      "fn": "KEY_FN",
+      "code": "F1",
+      "rawCode": 3,
+      "type": "modifier",
+      "accent": "orange"
+    },
+    {
+      "id": "caps",
+      "legend": "Aa",
+      "normal": "KEY_CAPS",
+      "fn": "KEY_CAPS",
+      "code": "CapsLock",
+      "rawCode": 7,
+      "type": "modifier",
+      "accent": "cyan"
+    },
+    {
+      "id": "a",
+      "legend": "a",
+      "normal": "a",
+      "fn": "A",
+      "code": "KeyA",
+      "rawCode": 13,
+      "type": "character"
+    },
+    {
+      "id": "s",
+      "legend": "s",
+      "normal": "s",
+      "fn": "S",
+      "code": "KeyS",
+      "rawCode": 17,
+      "type": "character"
+    },
+    {
+      "id": "d",
+      "legend": "d",
+      "normal": "d",
+      "fn": "D",
+      "code": "KeyD",
+      "rawCode": 23,
+      "type": "character"
+    },
+    {
+      "id": "f",
+      "legend": "f",
+      "normal": "f",
+      "fn": "F",
+      "code": "KeyF",
+      "rawCode": 27,
+      "type": "character"
+    },
+    {
+      "id": "g",
+      "legend": "g",
+      "normal": "g",
+      "fn": "G",
+      "code": "KeyG",
+      "rawCode": 33,
+      "type": "character"
+    },
+    {
+      "id": "h",
+      "legend": "h",
+      "normal": "h",
+      "fn": "H",
+      "code": "KeyH",
+      "rawCode": 37,
+      "type": "character"
+    },
+    {
+      "id": "j",
+      "legend": "j",
+      "normal": "j",
+      "fn": "J",
+      "code": "KeyJ",
+      "rawCode": 43,
+      "type": "character"
+    },
+    {
+      "id": "k",
+      "legend": "k",
+      "normal": "k",
+      "fn": "K",
+      "code": "KeyK",
+      "rawCode": 47,
+      "type": "character"
+    },
+    {
+      "id": "l",
+      "legend": "l",
+      "normal": "l",
+      "fn": "L",
+      "code": "KeyL",
+      "rawCode": 53,
+      "type": "character"
+    },
+    {
+      "id": "up",
+      "legend": "↑",
+      "normal": "KEY_UP",
+      "fn": ";",
+      "code": "ArrowUp",
+      "rawCode": 57,
+      "type": "action"
+    },
+    {
+      "id": "apostrophe",
+      "legend": "'",
+      "normal": "'",
+      "fn": "\"",
+      "code": "Quote",
+      "rawCode": 63,
+      "type": "character"
+    },
+    {
+      "id": "enter",
+      "legend": "enter",
+      "normal": "\n",
+      "fn": "\n",
+      "code": "Enter",
+      "rawCode": 67,
+      "type": "action"
+    },
+    {
+      "id": "ctrl",
+      "legend": "ctrl",
+      "normal": "KEY_CTRL",
+      "fn": "KEY_CTRL",
+      "code": "ControlLeft",
+      "rawCode": 4,
+      "type": "modifier",
+      "accent": "green"
+    },
+    {
+      "id": "opt",
+      "legend": "opt",
+      "normal": "KEY_OPT",
+      "fn": "KEY_OPT",
+      "code": "MetaLeft",
+      "rawCode": 8,
+      "type": "modifier",
+      "accent": "green"
+    },
+    {
+      "id": "alt",
+      "legend": "alt",
+      "normal": "KEY_ALT",
+      "fn": "KEY_ALT",
+      "code": "AltLeft",
+      "rawCode": 14,
+      "type": "modifier",
+      "accent": "green"
+    },
+    {
+      "id": "z",
+      "legend": "z",
+      "normal": "z",
+      "fn": "Z",
+      "code": "KeyZ",
+      "rawCode": 18,
+      "type": "character"
+    },
+    {
+      "id": "x",
+      "legend": "x",
+      "normal": "x",
+      "fn": "X",
+      "code": "KeyX",
+      "rawCode": 24,
+      "type": "character"
+    },
+    {
+      "id": "c",
+      "legend": "c",
+      "normal": "c",
+      "fn": "C",
+      "code": "KeyC",
+      "rawCode": 28,
+      "type": "character"
+    },
+    {
+      "id": "v",
+      "legend": "v",
+      "normal": "v",
+      "fn": "V",
+      "code": "KeyV",
+      "rawCode": 34,
+      "type": "character"
+    },
+    {
+      "id": "b",
+      "legend": "b",
+      "normal": "b",
+      "fn": "B",
+      "code": "KeyB",
+      "rawCode": 38,
+      "type": "character"
+    },
+    {
+      "id": "n",
+      "legend": "n",
+      "normal": "n",
+      "fn": "N",
+      "code": "KeyN",
+      "rawCode": 44,
+      "type": "character"
+    },
+    {
+      "id": "m",
+      "legend": "m",
+      "normal": "m",
+      "fn": "M",
+      "code": "KeyM",
+      "rawCode": 48,
+      "type": "character"
+    },
+    {
+      "id": "left",
+      "legend": "←",
+      "normal": "KEY_LEFT",
+      "fn": ",",
+      "code": "ArrowLeft",
+      "rawCode": 54,
+      "type": "action"
+    },
+    {
+      "id": "down",
+      "legend": "↓",
+      "normal": "KEY_DOWN",
+      "fn": ".",
+      "code": "ArrowDown",
+      "rawCode": 58,
+      "type": "action"
+    },
+    {
+      "id": "right",
+      "legend": "→",
+      "normal": "KEY_RIGHT",
+      "fn": "/",
+      "code": "ArrowRight",
+      "rawCode": 64,
+      "type": "action"
+    },
+    {
+      "id": "space",
+      "legend": "space",
+      "normal": " ",
+      "fn": " ",
+      "code": "Space",
+      "rawCode": 68,
+      "type": "action"
+    }
   ]
 }
